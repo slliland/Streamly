@@ -13,7 +13,7 @@ Streamly is a dynamic and interactive video platform built with Flutter. Inspire
 
 ## Screenshots
 
-*Insert Screenshots Here*
+[//]: # (*Insert Screenshots Here*)
 
 ---
 
@@ -54,5 +54,3 @@ Streamly is released under the MIT License. See [LICENSE](LICENSE) for details.
 
 [//]: # (*Insert Additional Pictures Here, such as app icons, banners, or in-app screen flows*)
 ```
-
-This README provides an overview and placeholders for inserting images or additional descriptions of specific features as needed. Let me know if there’s anything specific you'd like to add!
