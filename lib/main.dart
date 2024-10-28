@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:streamly/http/core/hi_error.dart';
+import 'package:streamly/http/request/notice_request.dart';
+import 'package:streamly/http/request/notice_request.dart';
+import 'package:streamly/page/registration_page.dart';
+import 'package:streamly/page/login_page.dart';
+import 'dart:convert';
+import 'db/hi_cache.dart';
+import 'http/core/hi_net.dart';
+import 'model/owner.dart';
+import 'package:streamly/http/dao/login_dao.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,6 +20,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    HiCache.preInit();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -31,7 +42,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginPage(),
     );
   }
 }
@@ -56,16 +67,83 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  @override
+  void initState() {
+    super.initState();
+    HiCache.preInit();
+  }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  void _incrementCounter() async {
+    // TestRequest request = TestRequest();
+    // request.add("aa", "dd").add("bb", "333").add("requestPrams", "k");
+    // try {
+    //   var result = await HiNet.getInstance().fire(request);
+    //   print(result);
+    // } on NeedAuth catch (e) {
+    //   print(e);
+    // } on NeedLogin catch (e) {
+    //   print(e);
+    // } on HiNetError catch (e) {
+    //   print(e);
+    // }
+    testNotice();
+  }
+
+  void test() {
+    const jsonString =
+        "{ \"name\": \"flutter\", \"url\": \"https://coding.imooc.com/class/487.html\" }";
+    //json -> map
+    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
+    print('name:${jsonMap['name']}');
+    print('url:${jsonMap['url']}');
+    //Map -> json
+    String json = jsonEncode(jsonMap);
+    print('json:$json');
+  }
+
+  void test1() {
+    var ownerMap = {
+      "name": "伊零Onezero",
+      "face":
+          "http://i2.hdslb.com/bfs/face/1c57a17a7b077ccd19dba58a981a673799b85aef.jpg",
+      "fans": 12
+    };
+    Owner owner = Owner.fromJson(ownerMap);
+    print('name:${owner.name}');
+    print('face:${owner.face}');
+    print('fans:${owner.fans}');
+  }
+
+  void test2() {
+    HiCache.getInstance().setString("aa", "1234");
+    var value = HiCache.getInstance().get("aa");
+    print('varlue:$value');
+  }
+
+  void testLogin() async {
+    try {
+      var result = await LoginDao.registration(
+          'lob7507999', 'songyujian2002', '11596437', "0878");
+      var result2 = await LoginDao.login('lob7507999', 'songyujian2002');
+      print(result2);
+    } on NeedAuth catch (e) {
+      print(e);
+    } on HiNetError catch (e) {
+      print(e);
+    }
+  }
+
+  void testNotice() async {
+    try {
+      var notice = await HiNet.getInstance().fire(NoticeRequest());
+      print(notice);
+    } on NeedAuth catch (e) {
+      print(e);
+    } on NeedLogin catch (e) {
+      print(e);
+    } on HiNetError catch (e) {
+      print(e.message);
+    }
   }
 
   @override
