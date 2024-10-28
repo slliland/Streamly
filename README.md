@@ -1,7 +1,6 @@
 # Streamly
 
-[//]: # (![Streamly Logo]&#40;images/logo.png&#41;)
-<img src="images/logo.png" alt="Description" height="200">
+![Streamly Logo](images/logo.png)
 Streamly is a dynamic and interactive video platform built with Flutter. Inspired by popular platforms like Bilibili, Streamly is designed for fans of animation, gaming, music, and creative content. It connects vibrant communities through user-generated videos, live streaming, and interactive discussions.
 
 ## Features
