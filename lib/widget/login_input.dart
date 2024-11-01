@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:streamly/util/color.dart';
 
@@ -10,6 +9,7 @@ class LoginInput extends StatefulWidget {
   final bool lineStretch;
   final bool obscureText;
   final TextInputType? keyboardType;
+  final String? initialValue; // New initialValue parameter
 
   const LoginInput(
     this.title,
@@ -20,6 +20,7 @@ class LoginInput extends StatefulWidget {
     this.lineStretch = false,
     this.obscureText = false,
     this.keyboardType,
+    this.initialValue, // Add initialValue to constructor
   }) : super(key: key);
 
   @override
@@ -28,12 +29,14 @@ class LoginInput extends StatefulWidget {
 
 class _LoginInputState extends State<LoginInput> {
   final _focusNode = FocusNode();
+  late TextEditingController _controller; // Add TextEditingController
 
   @override
   void initState() {
     super.initState();
+    _controller = TextEditingController(
+        text: widget.initialValue); // Initialize controller
     _focusNode.addListener(() {
-      print("Has focus: ${_focusNode.hasFocus}");
       widget.focusChanged?.call(_focusNode.hasFocus);
     });
   }
@@ -41,6 +44,7 @@ class _LoginInputState extends State<LoginInput> {
   @override
   void dispose() {
     _focusNode.dispose();
+    _controller.dispose(); // Dispose the controller
     super.dispose();
   }
 
@@ -74,6 +78,7 @@ class _LoginInputState extends State<LoginInput> {
 
   Widget _input() {
     return TextField(
+      controller: _controller, // Use controller for initialValue
       focusNode: _focusNode,
       onChanged: widget.onChanged,
       obscureText: widget.obscureText,

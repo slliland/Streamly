@@ -40,7 +40,7 @@ Streamly is a dynamic and interactive video platform built with Flutter. Inspire
 
 - **Flutter**: Cross-platform UI toolkit for mobile, web, and desktop.
 - **Dart**: Language for building scalable, high-quality applications.
-- **Shared Preferences**: Local storage for user settings and app data.
+- **Shared Preferences**: Storage for user settings and app data.
 
 ## Contributing
 

@@ -1,203 +1,131 @@
 import 'package:flutter/material.dart';
-import 'package:streamly/http/core/hi_error.dart';
-import 'package:streamly/http/request/notice_request.dart';
-import 'package:streamly/http/request/notice_request.dart';
-import 'package:streamly/page/registration_page.dart';
-import 'package:streamly/page/login_page.dart';
-import 'dart:convert';
-import 'db/hi_cache.dart';
-import 'http/core/hi_net.dart';
-import 'model/owner.dart';
+import 'package:streamly/db/hi_cache.dart';
 import 'package:streamly/http/dao/login_dao.dart';
+import 'package:streamly/navigator/hi_navigator.dart';
+import 'package:streamly/page/home_page.dart';
+import 'package:streamly/page/login_page.dart';
+import 'package:streamly/page/registration_page.dart';
+import 'package:streamly/page/video_detail_page.dart';
+import 'package:streamly/model/video_model.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(StreamApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
+class StreamApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    HiCache.preInit();
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: LoginPage(),
-    );
-  }
+  _StreamAppState createState() => _StreamAppState();
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  @override
-  void initState() {
-    super.initState();
-    HiCache.preInit();
-  }
-
-  void _incrementCounter() async {
-    // TestRequest request = TestRequest();
-    // request.add("aa", "dd").add("bb", "333").add("requestPrams", "k");
-    // try {
-    //   var result = await HiNet.getInstance().fire(request);
-    //   print(result);
-    // } on NeedAuth catch (e) {
-    //   print(e);
-    // } on NeedLogin catch (e) {
-    //   print(e);
-    // } on HiNetError catch (e) {
-    //   print(e);
-    // }
-    testNotice();
-  }
-
-  void test() {
-    const jsonString =
-        "{ \"name\": \"flutter\", \"url\": \"https://coding.imooc.com/class/487.html\" }";
-    //json -> map
-    Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-    print('name:${jsonMap['name']}');
-    print('url:${jsonMap['url']}');
-    //Map -> json
-    String json = jsonEncode(jsonMap);
-    print('json:$json');
-  }
-
-  void test1() {
-    var ownerMap = {
-      "name": "伊零Onezero",
-      "face":
-          "http://i2.hdslb.com/bfs/face/1c57a17a7b077ccd19dba58a981a673799b85aef.jpg",
-      "fans": 12
-    };
-    Owner owner = Owner.fromJson(ownerMap);
-    print('name:${owner.name}');
-    print('face:${owner.face}');
-    print('fans:${owner.fans}');
-  }
-
-  void test2() {
-    HiCache.getInstance().setString("aa", "1234");
-    var value = HiCache.getInstance().get("aa");
-    print('varlue:$value');
-  }
-
-  void testLogin() async {
-    try {
-      var result = await LoginDao.registration(
-          'lob7507999', 'songyujian2002', '11596437', "0878");
-      var result2 = await LoginDao.login('lob7507999', 'songyujian2002');
-      print(result2);
-    } on NeedAuth catch (e) {
-      print(e);
-    } on HiNetError catch (e) {
-      print(e);
-    }
-  }
-
-  void testNotice() async {
-    try {
-      var notice = await HiNet.getInstance().fire(NoticeRequest());
-      print(notice);
-    } on NeedAuth catch (e) {
-      print(e);
-    } on NeedLogin catch (e) {
-      print(e);
-    } on HiNetError catch (e) {
-      print(e.message);
-    }
-  }
+class _StreamAppState extends State<StreamApp> {
+  final StreamRouteDelegate _routeDelegate = StreamRouteDelegate();
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    return FutureBuilder<HiCache>(
+        //Using Hicache to pre initialize
+        future: HiCache.preInit(),
+        builder: (BuildContext context, AsyncSnapshot<HiCache> snapshot) {
+          //Define Router
+          var widget = snapshot.connectionState == ConnectionState.done
+              ? Router(
+                  routerDelegate: _routeDelegate,
+                )
+              : Scaffold(
+                  body: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+          return MaterialApp(
+            home: widget,
+            theme: ThemeData(primarySwatch: Colors.cyan),
+          );
+        });
+  }
+}
+
+class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<StreamRoutePath> {
+  final GlobalKey<NavigatorState> navigatorKey;
+  VideoModel? videoModel;
+  RouteStatus _routeStatus = RouteStatus.home;
+  List<MaterialPage> pages = [];
+  StreamRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  Widget build(BuildContext context) {
+    //Manage Router Stack
+    var index = getPageIndex(pages, routeStatus);
+    List<MaterialPage> tempPages = pages;
+    if (index != -1) {
+      //If the page to be opened already exists in the stack, pop the page and all the pages above it out of the stack
+      //tips The specific rules can be adjusted as needed. Here, only one instance of the same page is allowed in the stack
+      tempPages = tempPages.sublist(0, index);
+    }
+    var page;
+    if (routeStatus == RouteStatus.home) {
+      //When jump to the home page, other pages should be out of the stack, because home page can not roll back
+      pages.clear();
+      page = pageWrap(HomePage(
+        onJumpToDetail: (videoModel) {
+          this.videoModel = videoModel;
+          notifyListeners();
+        },
+      ));
+    } else if (routeStatus == RouteStatus.detail) {
+      page = pageWrap(VideoDetailPage(videoModel!));
+    } else if (routeStatus == RouteStatus.registration) {
+      page = pageWrap(RegistrationPage());
+    } else if (routeStatus == RouteStatus.login) {
+      page = pageWrap(LoginPage(onSuccess: () {
+        _routeStatus = RouteStatus.home;
+        notifyListeners();
+      }, onJumpRegistration: () {
+        _routeStatus = RouteStatus.registration;
+        notifyListeners();
+      }));
+    }
+    //Not keep pages in stack, create a new page, then put it back
+    tempPages = [...tempPages, page];
+    pages = tempPages;
+
+    return Navigator(
+      key: navigatorKey,
+      pages: pages,
+      onPopPage: (route, result) {
+        if (!route.didPop(result)) {
+          return false;
+        }
+        if (videoModel != null) {
+          // Clear videoModel to return to home page
+          videoModel = null;
+          notifyListeners();
+        }
+        return true;
+      },
     );
   }
+
+  //Router Interception
+  RouteStatus get routeStatus {
+    if (_routeStatus != RouteStatus.registration && !hasLogin) {
+      return _routeStatus = RouteStatus.login;
+    } else if (videoModel != null) {
+      return _routeStatus = RouteStatus.detail;
+    } else {
+      return _routeStatus;
+    }
+  }
+
+  bool get hasLogin => LoginDao.getBoardingPass() != null;
+
+  @override
+  Future<void> setNewRoutePath(StreamRoutePath path) async {}
+}
+
+class StreamRoutePath {
+  final String location;
+
+  StreamRoutePath.home() : location = "/";
+  StreamRoutePath.detail() : location = "/detail";
 }

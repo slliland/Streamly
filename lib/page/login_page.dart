@@ -10,6 +10,13 @@ import '../util/toast.dart';
 import '../widget/login_effect.dart';
 
 class LoginPage extends StatefulWidget {
+  final VoidCallback onJumpRegistration;
+  final VoidCallback onSuccess;
+
+  const LoginPage(
+      {Key? key, required this.onJumpRegistration, required this.onSuccess})
+      : super(key: key);
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -51,8 +58,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar('Login with password', 'Register', () {}),
+      appBar:
+          appBar('Login with password', 'Register', widget.onJumpRegistration),
       body: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: [
             LoginEffect(protect: protect),
@@ -63,7 +72,9 @@ class _LoginPageState extends State<LoginPage> {
                 userName = text;
                 checkInput();
               },
+              initialValue: userName, // Show saved username if available
             ),
+            SizedBox(height: 16), // Add spacing
             LoginInput(
               'Password',
               'Please Enter Your Password',
@@ -92,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+              padding: EdgeInsets.only(top: 20),
               child: LoginButton(
                 'Log In',
                 enable: loginEnable,
@@ -117,6 +128,7 @@ class _LoginPageState extends State<LoginPage> {
       if (result['code'] == 0) {
         showToast('Login successful');
         await _saveUsername(); // Save the username if "Remember Me" is checked
+        widget.onSuccess(); // Call the success callback
       } else {
         showWarnToast(result['msg']);
       }
