@@ -7,6 +7,7 @@ import 'package:streamly/page/login_page.dart';
 import 'package:streamly/page/registration_page.dart';
 import 'package:streamly/page/video_detail_page.dart';
 import 'package:streamly/model/video_model.dart';
+import 'package:streamly/util/toast.dart';
 
 void main() {
   runApp(StreamApp());
@@ -18,7 +19,7 @@ class StreamApp extends StatefulWidget {
 }
 
 class _StreamAppState extends State<StreamApp> {
-  final StreamRouteDelegate _routeDelegate = StreamRouteDelegate();
+  StreamRouteDelegate _routeDelegate = StreamRouteDelegate();
 
   @override
   Widget build(BuildContext context) {
@@ -89,20 +90,31 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
     tempPages = [...tempPages, page];
     pages = tempPages;
 
-    return Navigator(
-      key: navigatorKey,
-      pages: pages,
-      onPopPage: (route, result) {
-        if (!route.didPop(result)) {
-          return false;
-        }
-        if (videoModel != null) {
-          // Clear videoModel to return to home page
-          videoModel = null;
-          notifyListeners();
-        }
-        return true;
-      },
+    return WillPopScope(
+      //Fix Android physical back button
+      onWillPop: () async =>
+          !(await navigatorKey.currentState?.maybePop() ?? false),
+      child: Navigator(
+        key: navigatorKey,
+        pages: pages,
+        onPopPage: (route, result) {
+          if (route.settings is MaterialPage) {
+            //Log in page, if not logged in, block
+            if ((route.settings as MaterialPage).child is LoginPage) {
+              if (!hasLogin) {
+                showWarnToast("Please Log in First");
+                return false;
+              }
+            }
+          }
+          //Execute Back Operation
+          if (!route.didPop(result)) {
+            return false;
+          }
+          pages.removeLast();
+          return true;
+        },
+      ),
     );
   }
 
