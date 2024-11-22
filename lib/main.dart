@@ -9,6 +9,8 @@ import 'package:streamly/page/video_detail_page.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/util/toast.dart';
 
+import 'navigator/bottom_navigator.dart';
+
 void main() {
   runApp(StreamApp());
 }
@@ -48,10 +50,23 @@ class _StreamAppState extends State<StreamApp> {
 class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<StreamRoutePath> {
   final GlobalKey<NavigatorState> navigatorKey;
-  VideoModel? videoModel;
+
+  // Set a key for Navigator. When necessary, you can get the NavigatorState object through navigatorKey.currentState
+  StreamRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>() {
+    // Implementing routing jump logic
+    HiNavigator.getInstance().registerRouteJump(
+        RouteJumpListener(onJumpTo: (RouteStatus routeStatus, {Map? args}) {
+      _routeStatus = routeStatus;
+      if (routeStatus == RouteStatus.detail) {
+        this.videoModel = args!['videoMo'];
+      }
+      notifyListeners();
+    }));
+  }
+
   RouteStatus _routeStatus = RouteStatus.home;
   List<MaterialPage> pages = [];
-  StreamRouteDelegate() : navigatorKey = GlobalKey<NavigatorState>();
+  VideoModel? videoModel;
 
   @override
   Widget build(BuildContext context) {
@@ -67,29 +82,21 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
     if (routeStatus == RouteStatus.home) {
       //When jump to the home page, other pages should be out of the stack, because home page can not roll back
       pages.clear();
-      page = pageWrap(HomePage(
-        onJumpToDetail: (videoModel) {
-          this.videoModel = videoModel;
-          notifyListeners();
-        },
-      ));
+      page = pageWrap(BottomNavigator());
     } else if (routeStatus == RouteStatus.detail) {
       page = pageWrap(VideoDetailPage(videoModel!));
     } else if (routeStatus == RouteStatus.registration) {
-      page = pageWrap(RegistrationPage());
+      page = pageWrap(const RegistrationPage());
     } else if (routeStatus == RouteStatus.login) {
-      page = pageWrap(LoginPage(onSuccess: () {
-        _routeStatus = RouteStatus.home;
-        notifyListeners();
-      }, onJumpRegistration: () {
-        _routeStatus = RouteStatus.registration;
-        notifyListeners();
-      }));
+      page = pageWrap(const LoginPage());
     }
     //Not keep pages in stack, create a new page, then put it back
     tempPages = [...tempPages, page];
     pages = tempPages;
 
+    /// Notify route changes
+    HiNavigator.getInstance().notify(tempPages, pages);
+    pages = tempPages;
     return WillPopScope(
       //Fix Android physical back button
       onWillPop: () async =>
@@ -99,7 +106,7 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
         pages: pages,
         onPopPage: (route, result) {
           if (route.settings is MaterialPage) {
-            //Log in page, if not logged in, block
+            // Login page not logged in return interception
             if ((route.settings as MaterialPage).child is LoginPage) {
               if (!hasLogin) {
                 showWarnToast("Please Log in First");
@@ -107,11 +114,14 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
               }
             }
           }
-          //Execute Back Operation
+          // Execute return operation
           if (!route.didPop(result)) {
             return false;
           }
+          var tempPages = [...pages];
           pages.removeLast();
+          // Notify route changes
+          HiNavigator.getInstance().notify(pages, tempPages);
           return true;
         },
       ),

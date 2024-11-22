@@ -1,5 +1,5 @@
 class VideoModel {
-  final int vid;
+  int vid;
 
-  VideoModel({required this.vid});
+  VideoModel(this.vid);
 }

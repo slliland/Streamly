@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:streamly/http/core/hi_error.dart';
 import 'package:streamly/http/dao/login_dao.dart';
+import 'package:streamly/navigator/hi_navigator.dart';
 import 'package:streamly/util/string_util.dart';
 import 'package:streamly/widget/appbar.dart';
 import 'package:streamly/widget/login_button.dart';
@@ -10,12 +11,7 @@ import '../util/toast.dart';
 import '../widget/login_effect.dart';
 
 class LoginPage extends StatefulWidget {
-  final VoidCallback onJumpRegistration;
-  final VoidCallback onSuccess;
-
-  const LoginPage(
-      {Key? key, required this.onJumpRegistration, required this.onSuccess})
-      : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -58,8 +54,9 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          appBar('Login with password', 'Register', widget.onJumpRegistration),
+      appBar: appBar('Login with password', 'Register', () {
+        HiNavigator.getInstance().onJumpTo(RouteStatus.login);
+      }),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
@@ -128,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
       if (result['code'] == 0) {
         showToast('Login successful');
         await _saveUsername(); // Save the username if "Remember Me" is checked
-        widget.onSuccess(); // Call the success callback
+        HiNavigator.getInstance()
+            .onJumpTo(RouteStatus.home); // Use Hinavagator to jump back
       } else {
         showWarnToast(result['msg']);
       }

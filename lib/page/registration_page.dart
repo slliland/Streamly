@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:streamly/navigator/hi_navigator.dart';
 import '../http/core/hi_error.dart';
 import '../http/dao/login_dao.dart';
 import '../util/toast.dart';
@@ -29,7 +30,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar("Register", "Log In", widget.onJumpToLogin),
+      appBar: appBar("Register", "Log In", () {
+        HiNavigator.getInstance().onJumpTo(RouteStatus.login);
+      }),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
