@@ -39,6 +39,9 @@ dependencies:
   shared_preferences: ^2.3.2
   fluttertoast: ^8.2.8
   underline_indicator: ^0.0.4
+  translator: ^1.0.3+1
+  card_swiper: ^3.0.1
+  nested: ^1.0.0
 
 dev_dependencies:
   flutter_test:

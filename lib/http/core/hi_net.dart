@@ -1,71 +1,108 @@
-import 'package:flutter/cupertino.dart';
 import 'package:streamly/http/core/dio_adapter.dart';
 import 'package:streamly/http/core/hi_error.dart';
 import 'package:streamly/http/core/hi_net_adapter.dart';
 import 'package:streamly/http/core/mock_adapter.dart';
 import 'package:streamly/http/request/basic_request.dart';
 
+import 'hi_interceptor.dart';
+
+/// Network Manager Class
+/// This class provides an abstraction layer for managing network requests and error handling.
 class HiNet {
+  /// Private constructor to implement Singleton pattern.
   HiNet._();
-  // Nullable to handle initialization safely
+
+  /// Interceptor for handling errors globally.
+  HiErrorInterceptor? _hiErrorInterceptor;
+
+  /// Singleton instance of HiNet.
   static HiNet? _instance;
 
-  // Factory Constructor for initialization
-  factory HiNet() {
-    _instance ??= HiNet._();
-    return _instance!;
-  }
-
+  /// Returns the Singleton instance of HiNet.
   static HiNet getInstance() {
-    _instance ??= HiNet._();
+    if (_instance == null) {
+      _instance = HiNet._();
+    }
     return _instance!;
   }
 
-  Future<dynamic> fire(BaseRequest request) async {
+  /// Executes a network request and handles the response or errors.
+  /// [request]: The network request to execute.
+  Future fire(BaseRequest request) async {
     HiNetResponse? response;
     var error;
+
     try {
-      response = await send(request: request);
+      // Sends the network request and awaits the response.
+      response = await send(request);
     } on HiNetError catch (e) {
+      // Handles specific HiNet errors.
       error = e;
       response = e.data;
       printLog(e.message);
     } catch (e) {
+      // Handles any other unexpected exceptions.
       error = e;
       printLog(e);
     }
 
-    // Explicitly handle null response
     if (response == null) {
+      // Logs the error if no response is received.
       printLog(error);
-      throw error ?? Exception("Unknown error occurred");
     }
 
-    var result =
-        response.data ?? {}; // Provide an empty Map as fallback if null
+    var result = response?.data;
     printLog(result);
 
-    switch (response.statusCode) {
+    var status = response?.statusCode;
+    var hiError;
+
+    switch (status) {
       case 200:
+        // Returns the result if the status code is 200 (success).
         return result;
       case 401:
-        throw NeedLogin();
+        // Throws a NeedLogin error if status code is 401.
+        hiError = NeedLogin();
+        break;
       case 403:
-        throw NeedAuth(result.toString(), data: result);
+        // Throws a NeedAuth error with additional data if status code is 403.
+        hiError = NeedAuth(result.toString(), data: result);
+        break;
       default:
-        throw HiNetError(response.statusCode ?? -1, result.toString(),
-            data: result);
+        // For other status codes, throws a HiNetError with the existing error or new error details.
+        hiError =
+            error ?? HiNetError(status ?? -1, result.toString(), data: result);
+        break;
     }
+
+    // Passes the error to the interceptor for additional handling.
+    if (_hiErrorInterceptor != null) {
+      _hiErrorInterceptor!(hiError);
+    }
+
+    // Throws the processed error.
+    throw hiError;
   }
 
-  Future<HiNetResponse<T>> send<T>({required BaseRequest request}) async {
-    printLog('url: ${request.url()}');
-    // HiNetAdapter adapter = MockAdapter();
+  /// Sends a network request using the configured adapter (e.g., Dio).
+  /// [request]: The network request to execute.
+  /// Returns a [HiNetResponse] containing the response data.
+  Future<HiNetResponse<T>> send<T>(BaseRequest request) async {
+    /// Uses Dio as the HTTP adapter to send the request.
     HiNetAdapter adapter = DioAdapter();
-    return await adapter.send(request);
+    return adapter.send(request);
   }
 
-  void printLog(dynamic log) {
-    print('hi_net: ${log.toString()}');
+  /// Sets a global error interceptor for handling errors.
+  /// [interceptor]: The error interceptor to set.
+  void setErrorInterceptor(HiErrorInterceptor interceptor) {
+    this._hiErrorInterceptor = interceptor;
+  }
+
+  /// Logs network-related information or errors.
+  /// [log]: The log message to output.
+  void printLog(log) {
+    print('hi_net:' + log.toString());
   }
 }

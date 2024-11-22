@@ -9,6 +9,8 @@ import 'package:streamly/page/video_detail_page.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/util/toast.dart';
 
+import 'http/core/hi_error.dart';
+import 'http/core/hi_net.dart';
 import 'navigator/bottom_navigator.dart';
 
 void main() {
@@ -62,6 +64,15 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
       }
       notifyListeners();
     }));
+    //设置网络错误拦截器
+    HiNet.getInstance().setErrorInterceptor((error) {
+      if (error is NeedLogin) {
+        //清空失效的登录令牌
+        HiCache.getInstance().remove(LoginDao.BOARDING_PASS);
+        //拉起登录
+        HiNavigator.getInstance().onJumpTo(RouteStatus.login);
+      }
+    });
   }
 
   RouteStatus _routeStatus = RouteStatus.home;
@@ -92,7 +103,6 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
     }
     //Not keep pages in stack, create a new page, then put it back
     tempPages = [...tempPages, page];
-    pages = tempPages;
 
     /// Notify route changes
     HiNavigator.getInstance().notify(tempPages, pages);

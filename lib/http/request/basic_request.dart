@@ -49,10 +49,8 @@ abstract class BaseRequest {
     'course-flag': 'fa',
     "auth-token": "ZmEtMjAyMS0wNC0xMiAyMToyMjoyMC1mYQ==fa",
   };
-  BaseRequest addHeader(String k, Object? v) {
-    if (v != null) {
-      header[k] = v.toString();
-    }
+  BaseRequest addHeader(String k, Object v) {
+    header[k] = v.toString();
     return this;
   }
 }
