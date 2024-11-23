@@ -75,6 +75,11 @@ flutter:
     - images/head_left_protect.png
     - images/head_right.png
     - images/head_right_protect.png
+    - images/banner_eg_1.jpg
+    - images/banner_eg_2.jpg
+    - images/banner_eg_3.jpg
+    - images/banner_eg_4.jpg
+    - images/banner_default.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

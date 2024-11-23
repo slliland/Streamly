@@ -22,10 +22,6 @@ class _HomeTabPageState extends State<HomeTabPage> {
         children: [
           if (widget.bannerList != null && widget.bannerList!.isNotEmpty)
             _banner()
-          else
-            Center(
-              child: Text("No banners available"),
-            )
         ],
       ),
     );

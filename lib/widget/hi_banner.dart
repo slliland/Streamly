@@ -52,10 +52,15 @@ class HiBanner extends StatelessWidget {
         padding: padding,
         child: ClipRRect(
           borderRadius: BorderRadius.all(Radius.circular(6)),
-          child: Image.network(
-            bannerMo.cover ?? 'https://via.placeholder.com/150', // Fallback URL
-            fit: BoxFit.cover,
-          ),
+          child: bannerMo.cover != null && bannerMo.cover!.startsWith('images/')
+              ? Image.asset(
+                  bannerMo.cover!,
+                  fit: BoxFit.cover,
+                )
+              : Image.network(
+                  bannerMo.cover ?? 'https://via.placeholder.com/150',
+                  fit: BoxFit.cover,
+                ),
         ),
       ),
     );
