@@ -1,8 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools"
     <application
         android:label="streamly"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        android:usesCleartextTraffic="true"
+        tools:targetApi="28"
         <activity
             android:name=".MainActivity"
             android:exported="true"

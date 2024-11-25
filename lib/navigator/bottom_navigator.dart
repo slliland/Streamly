@@ -25,7 +25,12 @@ class _BottomNavigatorState extends State<BottomNavigator> {
 
   @override
   Widget build(BuildContext context) {
-    _pages = [HomePage(), RankingPage(), FavoritePage(), ProfilePage()];
+    _pages = [
+      HomePage(onJumpTo: (index) => _onJumpTo(index, pageChange: false)),
+      RankingPage(),
+      FavoritePage(),
+      ProfilePage()
+    ];
     if (!_hasBuild) {
       // Notify which tab is opened when the page is first built
       HiNavigator.getInstance()

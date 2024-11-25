@@ -16,8 +16,9 @@ class HomeTabPage extends StatefulWidget {
 class _HomeTabPageState extends State<HomeTabPage> {
   @override
   Widget build(BuildContext context) {
-    print('HomeTabPage bannerList: ${widget.bannerList}');
-    return Container(
+    return MediaQuery.removePadding(
+      removeTop: true,
+      context: context,
       child: ListView(
         children: [
           if (widget.bannerList != null && widget.bannerList!.isNotEmpty)

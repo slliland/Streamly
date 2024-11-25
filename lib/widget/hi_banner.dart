@@ -37,7 +37,7 @@ class HiBanner extends StatelessWidget {
           alignment: Alignment.bottomRight,
           margin: EdgeInsets.only(right: 10, bottom: 10),
           builder: DotSwiperPaginationBuilder(
-              color: Colors.white60, size: 6, activeSize: 6)),
+              color: Colors.white60, size: 6, activeSize: 12)),
     );
   }
 
