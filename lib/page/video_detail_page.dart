@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:streamly/model/video_model.dart';
+import 'package:streamly/widget/video_view.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final VideoModel videoModel;
@@ -15,9 +16,16 @@ class _VideoDetailPageState extends State<VideoDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Video Detail Page')),
-      body: Center(
-        child: Text('Video Detail Page, vid: ${widget.videoModel.vid}'),
-      ),
+      body: Column(children: [
+        Text('Video Detail Page, vid: ${widget.videoModel.vid}'),
+        Text('Video Detail Page, title: ${widget.videoModel.title}'),
+        _videoView()
+      ]),
     );
+  }
+
+  _videoView() {
+    var model = widget.videoModel;
+    return VideoView(model.url!, cover: model.cover!);
   }
 }

@@ -47,6 +47,8 @@ dependencies:
   flutter_nested: ^1.0.0
   transparent_image: ^2.0.1
   lottie: ^3.1.3
+  chewie: ^1.8.5
+  video_player: ^2.9.2
 
 dev_dependencies:
   flutter_test:

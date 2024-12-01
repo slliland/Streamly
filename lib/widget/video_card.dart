@@ -146,26 +146,31 @@ class _VideoCardState extends State<VideoCard> {
   }
 
   _owner() {
+    var owner = VideoModel.owner;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: cachedImage(widget.videoMo.owner?.face ?? '',
-                    height: 24, width: 24)),
-            Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Text(
-                translatedOwnerName,
-                style: TextStyle(fontSize: 11, color: Colors.black87),
+        Expanded(
+          child: Row(
+            children: [
+              /// Owner's avatar
+              ClipRRect(
+                  borderRadius: BorderRadius.circular(12), // Circular avatar
+                  child: cachedImage(owner!.face!, height: 24, width: 24)),
+              SizedBox(width: 8), // Add spacing between avatar and text
+              Expanded(
+                child: Text(
+                  owner.name!, // Owner's name
+                  maxLines: 1, // Limit to a single line
+                  overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
+                  style: TextStyle(fontSize: 11, color: Colors.black87),
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
         const Icon(
-          Icons.more_vert_sharp,
+          Icons.more_vert_sharp, // Options icon
           size: 15,
           color: Colors.grey,
         )

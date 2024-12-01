@@ -63,7 +63,6 @@ class _HomePageState extends HiState<HomePage>
       // Access the 'text' property of the Translation object
       category.name =
           (await translator.translate(category.name ?? '', to: 'en')).text;
-      print(category.name);
     }
     setState(() {});
   }
