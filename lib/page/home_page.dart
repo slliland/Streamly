@@ -4,6 +4,7 @@ import 'package:streamly/http/dao/home_dao.dart';
 import 'package:streamly/model/home_mo.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
+import 'package:streamly/widget/loading_container.dart';
 import 'package:translator/translator.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 import 'package:streamly/widget/navigation_bar.dart';
@@ -62,6 +63,7 @@ class _HomePageState extends HiState<HomePage>
       // Access the 'text' property of the Translation object
       category.name =
           (await translator.translate(category.name ?? '', to: 'en')).text;
+      print(category.name);
     }
     setState(() {});
   }
@@ -94,7 +96,9 @@ class _HomePageState extends HiState<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      body: Column(
+        body: LoadingContainer(
+      isLoading: _isLoading,
+      child: Column(
         children: [
           MyNavigationBar(
             height: 50,
@@ -120,7 +124,7 @@ class _HomePageState extends HiState<HomePage>
                   }).toList()))
         ],
       ),
-    );
+    ));
   }
 
   // Ensure not create duplicate pages while tab changes
@@ -155,7 +159,7 @@ class _HomePageState extends HiState<HomePage>
       print('loadData():$result');
       if (result.categoryList != null) {
         // Dispose of the old controller before creating a new one
-        _controller.dispose();
+        // _controller.dispose();
         _controller = TabController(
             length: result.categoryList?.length ?? 0, vsync: this);
       }

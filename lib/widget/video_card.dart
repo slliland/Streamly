@@ -63,7 +63,7 @@ class VideoCard extends StatelessWidget {
             bottom: 0,
             child: Container(
               padding: EdgeInsets.only(left: 8, right: 8, bottom: 2, top: 2),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
 
                   /// Adds a gradient overlay for better contrast
                   gradient: LinearGradient(
@@ -115,7 +115,7 @@ class VideoCard extends StatelessWidget {
         children: [
           /// Video title
           Text(
-            videoMo.title!,
+            videoMo.title,
             maxLines: 2, // Limits title to 2 lines
             overflow: TextOverflow.ellipsis, // Adds ellipsis for overflow
             style: TextStyle(fontSize: 14, color: Colors.black87),
@@ -147,7 +147,7 @@ class VideoCard extends StatelessWidget {
             )
           ],
         ),
-        Icon(
+        const Icon(
           Icons.more_vert_sharp, // Options icon
           size: 15,
           color: Colors.grey,

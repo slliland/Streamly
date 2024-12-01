@@ -25,27 +25,27 @@ class HiBanner extends StatelessWidget {
   }
 
   _banner() {
-    print('Swiper itemCount: ${bannerList.length}');
+    var right = 10 + (padding?.horizontal ?? 0) / 2;
     return Swiper(
       itemCount: bannerList.length,
       autoplay: true,
       itemBuilder: (BuildContext context, int index) {
-        print('Rendering banner at index: $index');
+        // print('Rendering banner at index: $index');
         return _image(bannerList[index]);
       },
       pagination: SwiperPagination(
           alignment: Alignment.bottomRight,
-          margin: EdgeInsets.only(right: 10, bottom: 10),
-          builder: DotSwiperPaginationBuilder(
-              color: Colors.white60, size: 6, activeSize: 12)),
+          margin: EdgeInsets.only(right: right, bottom: 10),
+          builder: const DotSwiperPaginationBuilder(
+              color: Colors.white60, size: 6, activeSize: 6)),
     );
   }
 
   _image(BannerMo bannerMo) {
-    print('BannerMo cover: ${bannerMo.cover}');
+    // print('BannerMo cover: ${bannerMo.cover}');
     return InkWell(
       onTap: () {
-        print('Banner title: ${bannerMo.title}');
+        // print('Banner title: ${bannerMo.title}');
         handleBannerClick(bannerMo);
       },
       child: Container(
@@ -71,7 +71,7 @@ class HiBanner extends StatelessWidget {
       HiNavigator.getInstance().onJumpTo(RouteStatus.detail,
           args: {'videoMo': VideoModel(vid: bannerMo.url!)});
     } else {
-      print('type:${bannerMo.type} ,url:${bannerMo.url}');
+      // print('type:${bannerMo.type} ,url:${bannerMo.url}');
       //todo
     }
   }
