@@ -104,7 +104,6 @@ class _HomePageState extends HiState<HomePage>
           ),
           Container(
             color: Colors.white,
-            padding: EdgeInsets.only(top: 20),
             child: _tabBar(),
           ),
           // Make page changes according to its tab
@@ -113,7 +112,7 @@ class _HomePageState extends HiState<HomePage>
                   controller: _controller,
                   children: categoryList.map((tab) {
                     return HomeTabPage(
-                      name: tab.name ?? 'Unknown',
+                      categoryName: tab.name ?? 'Unknown',
                       bannerList: (tab.name == '推荐' || tab.name == 'recommend')
                           ? bannerList
                           : null,
