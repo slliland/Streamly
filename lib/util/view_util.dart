@@ -7,27 +7,33 @@ import 'package:flutter/services.dart';
 enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
 
 /// Image with caching
-Widget cachedImage(String url, {double? width, double? height}) {
+Widget cachedImage(
+  String url, {
+  double? width,
+  double? height,
+  BoxFit fit = BoxFit.cover, // Added fit parameter with default value
+}) {
   return CachedNetworkImage(
-      height: height,
-      width: width,
-      fit: BoxFit.cover,
-      placeholder: (
-        BuildContext context,
-        String url,
-      ) =>
-          Container(color: Colors.grey[200]),
-      errorWidget: (
-        BuildContext context,
-        String url,
-        dynamic error,
-      ) =>
-          Icon(Icons.error),
-      imageUrl: url);
+    height: height,
+    width: width,
+    fit: fit, // Utilize the fit parameter
+    placeholder: (
+      BuildContext context,
+      String url,
+    ) =>
+        Container(color: Colors.grey[200]),
+    errorWidget: (
+      BuildContext context,
+      String url,
+      dynamic error,
+    ) =>
+        Icon(Icons.error),
+    imageUrl: url,
+  );
 }
 
 /// Black linear gradient
-blackLinearGradient({bool fromTop = false}) {
+LinearGradient blackLinearGradient({bool fromTop = false}) {
   return LinearGradient(
       begin: fromTop ? Alignment.topCenter : Alignment.bottomCenter,
       end: fromTop ? Alignment.bottomCenter : Alignment.topCenter,

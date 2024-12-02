@@ -21,6 +21,7 @@ class _VideoCardState extends State<VideoCard> {
   String translatedTitle = '';
   String translatedOwnerName = '';
   final translator = GoogleTranslator();
+  bool _isDisposed = false; // Track disposal state
 
   @override
   void initState() {
@@ -28,152 +29,195 @@ class _VideoCardState extends State<VideoCard> {
     _translateContent();
   }
 
+  @override
+  void dispose() {
+    _isDisposed = true; // Mark as disposed
+    super.dispose();
+  }
+
   /// Translates the title and owner name of the video
   void _translateContent() async {
-    translatedTitle = widget.videoMo.title; // Default to original title
-    translatedOwnerName =
-        widget.videoMo.owner?.name ?? ''; // Default owner name
+    // Initialize with original values
+    translatedTitle = widget.videoMo.title;
+    translatedOwnerName = widget.videoMo.owner?.name ?? '';
 
+    // Translate title if not empty
     if (widget.videoMo.title.isNotEmpty) {
-      final translated =
-          await translator.translate(widget.videoMo.title, to: 'en');
-      setState(() {
-        translatedTitle = translated.text;
-      });
+      try {
+        final translated =
+            await translator.translate(widget.videoMo.title, to: 'en');
+        if (!_isDisposed && mounted) {
+          // Ensure the widget is still mounted and not disposed
+          setState(() {
+            translatedTitle = translated.text;
+          });
+        }
+      } catch (e) {
+        // Handle translation errors if necessary
+        print('Translation error for title: $e');
+      }
     }
 
+    // Translate owner name if available
     if (widget.videoMo.owner?.name != null) {
-      final translated =
-          await translator.translate(widget.videoMo.owner!.name!, to: 'en');
-      setState(() {
-        translatedOwnerName = translated.text;
-      });
+      try {
+        final translated =
+            await translator.translate(widget.videoMo.owner!.name!, to: 'en');
+        if (!_isDisposed && mounted) {
+          // Ensure the widget is still mounted and not disposed
+          setState(() {
+            translatedOwnerName = translated.text;
+          });
+        }
+      } catch (e) {
+        // Handle translation errors if necessary
+        print('Translation error for owner name: $e');
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
-          print(widget.videoMo.url);
-          HiNavigator.getInstance()
-              .onJumpTo(RouteStatus.detail, args: {"videoMo": widget.videoMo});
-        },
-        child: SizedBox(
-          height: 170,
-          child: Card(
-            margin: EdgeInsets.only(left: 4, right: 4, bottom: 8),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _itemImage(context),
-                  _infoText(),
-                ],
-              ),
+      onTap: () {
+        print(widget.videoMo.url);
+        HiNavigator.getInstance()
+            .onJumpTo(RouteStatus.detail, args: {"videoMo": widget.videoMo});
+      },
+      child: SizedBox(
+        height: 170,
+        child: Card(
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _itemImage(context),
+                _infoText(),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
-  _itemImage(BuildContext context) {
+  /// Builds the video thumbnail with overlays for metadata (views, likes, duration)
+  Widget _itemImage(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        cachedImage(widget.videoMo.cover!,
-            width: size.width / 2 - 10, height: 160),
+        // Video Cover Image with fit parameter
+        cachedImage(
+          widget.videoMo.cover!,
+          width: size.width / 2 - 10,
+          height: 160,
+          fit: BoxFit.cover, // Now supported by cachedImage
+        ),
+        // Overlay for Views, Likes, and Duration
         Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: EdgeInsets.only(left: 8, right: 8, bottom: 2, top: 2),
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [Colors.black54, Colors.transparent])),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _iconText(Icons.ondemand_video, widget.videoMo.view!),
-                  _iconText(Icons.favorite_border, widget.videoMo.favorite!),
-                  _iconText(null, widget.videoMo.duration!),
-                ],
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [Colors.black54, Colors.transparent],
               ),
-            ))
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _iconText(Icons.ondemand_video, widget.videoMo.view!),
+                _iconText(Icons.favorite_border, widget.videoMo.favorite!),
+                _iconText(null, widget.videoMo.duration!),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
 
-  _iconText(IconData? iconData, int count) {
-    String views = "";
+  /// Builds a row for an icon and its corresponding text
+  Widget _iconText(IconData? iconData, int count) {
+    String displayText;
     if (iconData != null) {
-      views = countFormat(count);
+      displayText = countFormat(count);
     } else {
-      views = durationTransform(widget.videoMo.duration!);
+      displayText = durationTransform(widget.videoMo.duration!);
     }
+
     return Row(
       children: [
         if (iconData != null) Icon(iconData, color: Colors.white, size: 12),
         Padding(
-            padding: EdgeInsets.only(left: 3),
-            child: Text(views,
-                style: TextStyle(color: Colors.white, fontSize: 10)))
+          padding: const EdgeInsets.only(left: 3),
+          child: Text(
+            displayText,
+            style: const TextStyle(color: Colors.white, fontSize: 10),
+          ),
+        ),
       ],
     );
   }
 
-  _infoText() {
-    return Expanded(
-        child: Container(
-      padding: EdgeInsets.only(top: 5, left: 8, right: 8, bottom: 5),
+  /// Builds the video title and owner information section
+  Widget _infoText() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Video Title
           Text(
             translatedTitle,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 14, color: Colors.black87),
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
           ),
-          _owner()
+          const SizedBox(height: 5),
+          // Owner Information
+          _owner(),
         ],
       ),
-    ));
+    );
   }
 
-  _owner() {
-    var owner = VideoModel.owner;
+  /// Builds the owner section with avatar and name
+  Widget _owner() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Row(
-            children: [
-              /// Owner's avatar
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(12), // Circular avatar
-                  child: cachedImage(owner!.face!, height: 24, width: 24)),
-              SizedBox(width: 8), // Add spacing between avatar and text
-              Expanded(
-                child: Text(
-                  owner.name!, // Owner's name
-                  maxLines: 1, // Limit to a single line
-                  overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
-                  style: TextStyle(fontSize: 11, color: Colors.black87),
-                ),
-              ),
-            ],
+        // Owner Avatar
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: cachedImage(
+            widget.videoMo.owner?.face ?? '',
+            height: 24,
+            width: 24,
+            fit: BoxFit.cover, // Now supported by cachedImage
           ),
         ),
+        const SizedBox(width: 8),
+        // Owner Name with Expanded to handle overflow
+        Expanded(
+          child: Text(
+            translatedOwnerName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 11, color: Colors.black87),
+          ),
+        ),
+        // More Options Icon
         const Icon(
-          Icons.more_vert_sharp, // Options icon
+          Icons.more_vert_sharp,
           size: 15,
           color: Colors.grey,
-        )
+        ),
       ],
     );
   }
