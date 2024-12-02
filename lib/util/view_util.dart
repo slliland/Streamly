@@ -33,7 +33,7 @@ Widget cachedImage(
 }
 
 /// Black linear gradient
-LinearGradient blackLinearGradient({bool fromTop = false}) {
+blackLinearGradient({bool fromTop = false}) {
   return LinearGradient(
       begin: fromTop ? Alignment.topCenter : Alignment.bottomCenter,
       end: fromTop ? Alignment.bottomCenter : Alignment.topCenter,
