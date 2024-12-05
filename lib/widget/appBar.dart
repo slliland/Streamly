@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+import '../util/view_util.dart';
+
 appBar(String title, String rightTitle, VoidCallback? rightButtonClick) {
   return AppBar(
     //Title at left
@@ -25,5 +27,31 @@ appBar(String title, String rightTitle, VoidCallback? rightButtonClick) {
         ),
       )
     ],
+  );
+}
+
+videoAppBar() {
+  return Container(
+    padding: const EdgeInsets.only(right: 8),
+    decoration: BoxDecoration(gradient: blackLinearGradient(fromTop: true)),
+    child: const Row(
+      // Left and Right Arrangement
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        BackButton(
+          color: Colors.white,
+        ),
+        Row(
+          children: [
+            Icon(Icons.live_tv_rounded, color: Colors.white, size: 20),
+            Padding(
+              padding: EdgeInsets.only(left: 12),
+              child:
+                  Icon(Icons.more_vert_rounded, color: Colors.white, size: 20),
+            )
+          ],
+        )
+      ],
+    ),
   );
 }

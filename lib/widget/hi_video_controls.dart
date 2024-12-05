@@ -100,11 +100,9 @@ class _MaterialControlsState extends State<MaterialControls>
             children: [
               widget.barrageUI ?? Container(),
               if (_latestValue.isBuffering)
-                const Expanded(
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
+                const Center(
+                  child: CircularProgressIndicator(
+                    color: primaryColor,
                   ),
                 )
               else
@@ -288,7 +286,7 @@ class _MaterialControlsState extends State<MaterialControls>
                   _cancelAndRestartTimer();
                 }
               } else {
-                _playPause();
+                // _playPause();
 
                 setState(() {
                   notifier.hideStuff = true;
