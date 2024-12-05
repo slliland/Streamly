@@ -4,6 +4,8 @@ import 'package:streamly/http/dao/home_dao.dart';
 import 'package:streamly/model/home_mo.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
+import 'package:streamly/page/profile_page.dart';
+import 'package:streamly/page/video_detail_page.dart';
 import 'package:streamly/widget/loading_container.dart';
 import 'package:translator/translator.dart';
 import 'package:underline_indicator/underline_indicator.dart';
@@ -13,6 +15,7 @@ import '../http/core/hi_error.dart';
 import '../util/color.dart';
 import '../util/toast.dart';
 import '../util/view_util.dart';
+import '../widget/hi_tab.dart';
 import 'home_tab_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,7 +27,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends HiState<HomePage>
-    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
+    with
+        AutomaticKeepAliveClientMixin,
+        TickerProviderStateMixin,
+        WidgetsBindingObserver {
   var listener;
   late TabController _controller;
   List<CategoryMo> categoryList = [];
@@ -34,6 +40,7 @@ class _HomePageState extends HiState<HomePage>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _controller = TabController(length: categoryList.length, vsync: this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
       print('home:current:${current.page}');
@@ -45,16 +52,48 @@ class _HomePageState extends HiState<HomePage>
       } else if (widget == pre?.page || pre?.page is HomePage) {
         print('Home Page:onPause');
       }
+      if (pre?.page is VideoDetailPage && !(current.page is ProfilePage)) {
+        var statusStyle = StatusStyle.DARK_CONTENT;
+        changeStatusBar(color: Colors.white, statusStyle: statusStyle);
+      }
     });
     loadData();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     HiNavigator.getInstance().removeListener(this.listener);
     // Must map with creation of the _controller
     _controller.dispose();
     super.dispose();
+  }
+
+  /// Monitor lifecycle changes
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print(':didChangeAppLifecycleState:$state');
+    switch (state) {
+      case AppLifecycleState.inactive:
+        // Handle inactive state if necessary
+        break;
+      case AppLifecycleState.resumed:
+        // Switch from background to foreground, can be viewed
+        // Fix status bar changed to white's problem
+        changeStatusBar();
+        break;
+      case AppLifecycleState.paused:
+        // Handle paused state if necessary
+        break;
+      case AppLifecycleState.detached:
+        // Handle detached state if necessary
+        break;
+      case AppLifecycleState.hidden:
+        // Handle hidden state if necessary
+        // For example, pause video playback or animations
+        break;
+    }
   }
 
   void convertCategoryListToEnglish() async {
@@ -132,24 +171,18 @@ class _HomePageState extends HiState<HomePage>
 
   /// Customized Header Tabs
   _tabBar() {
-    return TabBar(
-        controller: _controller,
-        isScrollable: true,
-        labelColor: Colors.black,
-        indicator: UnderlineIndicator(
-            strokeCap: StrokeCap.round,
-            borderSide: BorderSide(color: primaryColor.shade500, width: 3),
-            insets: EdgeInsets.only(left: 15, right: 15)),
-        tabs: categoryList.map<Tab>((tab) {
-          return Tab(
-              child: Padding(
-            padding: EdgeInsets.only(left: 5, right: 5),
-            child: Text(
-              tab.name ?? 'Unknown',
-              style: TextStyle(fontSize: 16),
-            ),
-          ));
-        }).toList());
+    return HiTab(
+      categoryList.map<Tab>((tab) {
+        return Tab(
+          text: tab.name,
+        );
+      }).toList(),
+      controller: _controller,
+      fontSize: 16,
+      borderWidth: 3,
+      unselectedLabelColor: Colors.black54,
+      insets: 13,
+    );
   }
 
   void loadData() async {
