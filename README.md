@@ -16,13 +16,13 @@ Streamly is a dynamic and interactive video platform built with Flutter. Inspire
 
 ## Screenshots
 
-<center class="half">
+<div align=center>
 	<img src="images/Screenshot_2.png" width="200"/><img src="images/Screenshot_3.png"width="200"/>
-</center>
+</div>
 
-<center class="half">
+<div align=center>
 <img src="images/Screenshot_4.png"width="200"/><img src="images/Screenshot_5.png"width="200"/>
-</center>
+</div>
 ---
 
 ## Getting Started
