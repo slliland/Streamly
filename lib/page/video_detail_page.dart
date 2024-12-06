@@ -5,9 +5,16 @@ import 'package:streamly/model/video_model.dart';
 import 'package:streamly/widget/appBar.dart';
 import 'package:streamly/widget/video_view.dart';
 
+import 'package:streamly/model/video_model.dart' as video;
+import 'package:streamly/model/owner.dart' as owner;
+import 'package:underline_indicator/underline_indicator.dart';
+
+import '../util/color.dart';
 import '../util/view_util.dart';
+import '../widget/expandable_content.dart';
 import '../widget/hi_tab.dart';
 import '../widget/navigation_bar.dart';
+import '../widget/video_header.dart';
 
 class VideoDetailPage extends StatefulWidget {
   final VideoModel videoModel;
@@ -26,7 +33,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   @override
   void initState() {
     super.initState();
-    //黑色状态栏，仅Android
+    // Black status bar, only on Android
     changeStatusBar(
         color: Colors.black, statusStyle: StatusStyle.LIGHT_CONTENT);
     _controller = TabController(length: tabs.length, vsync: this);
@@ -42,20 +49,37 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   Widget build(BuildContext context) {
     return Scaffold(
       body: MediaQuery.removePadding(
-          removeTop: Platform.isIOS,
-          context: context,
-          child: Column(
-            children: [
-              //iOS 黑色状态栏
-              MyNavigationBar(
-                color: Colors.black,
-                statusStyle: StatusStyle.LIGHT_CONTENT,
-                height: Platform.isAndroid ? 0 : 46,
+        removeTop: Platform.isIOS,
+        context: context,
+        child: Column(
+          children: [
+            // iOS Black Status Bar
+            MyNavigationBar(
+              color: Colors.black,
+              statusStyle: StatusStyle.LIGHT_CONTENT,
+              height: Platform.isAndroid ? 0 : 46,
+            ),
+            _buildVideoView(),
+            _buildTabNavigation(),
+            Flexible(
+              child: TabBarView(
+                controller: _controller,
+                children: [
+                  _buildDetailList(),
+                  Container(
+                    child: Center(
+                      child: Text(
+                        'Coming soon...',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+                  )
+                ],
               ),
-              _buildVideoView(),
-              _buildTabNavigation(),
-            ],
-          )),
+            )
+          ],
+        ),
+      ),
     );
   }
 
@@ -69,40 +93,68 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   }
 
   _buildTabNavigation() {
-    //使用Material实现阴影效果
     return Material(
       elevation: 5,
       shadowColor: Colors.grey[100],
       child: Container(
-        alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: 20),
-        height: 39,
-        color: Colors.white,
+        height: 50,
+        padding: EdgeInsets.symmetric(horizontal: 10), // Uniform padding
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _tabBar(),
+            // TabBar on the left
+            Expanded(
+              child: TabBar(
+                controller: _controller,
+                isScrollable: true,
+                indicator: UnderlineIndicator(
+                  strokeCap: StrokeCap.round, // Rounded indicator
+                  borderSide: BorderSide(color: primaryColor, width: 2),
+                  insets: EdgeInsets.symmetric(horizontal: 0),
+                ), // No underline
+                labelColor: primaryColor,
+                unselectedLabelColor: Colors.grey,
+                labelStyle: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+                unselectedLabelStyle: TextStyle(fontSize: 14),
+                tabs: tabs.map((tab) => Tab(text: tab)).toList(),
+              ),
+            ),
+            // Static Icon on the right
             Padding(
-              padding: EdgeInsets.only(right: 20),
+              padding: EdgeInsets.only(left: 10), // Add spacing to the left
               child: Icon(
                 Icons.live_tv_rounded,
                 color: Colors.grey,
+                size: 24,
               ),
-            )
+            ),
           ],
         ),
       ),
     );
   }
 
-  _tabBar() {
-    return HiTab(
-      tabs.map<Tab>((name) {
-        return Tab(
-          text: name,
-        );
-      }).toList(),
-      controller: _controller,
+  _buildDetailList() {
+    return ListView(
+      padding: EdgeInsets.all(0),
+      children: [...buildContents()],
     );
+  }
+
+  buildContents() {
+    return [
+      VideoHeader(
+        owner: convertOwner(widget.videoModel.owner),
+      ),
+      ExpandableContent(mo: widget.videoModel)
+    ];
+  }
+
+  // Conversion helper
+  owner.Owner convertOwner(video.Owner videoOwner) {
+    return owner.Owner.fromJson(videoOwner.toJson());
   }
 }
