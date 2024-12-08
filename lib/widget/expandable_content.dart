@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:streamly/util/view_util.dart';
+import 'package:translator/translator.dart';
 import '../model/video_model.dart';
 
 class ExpandableContent extends StatefulWidget {
@@ -14,25 +15,43 @@ class ExpandableContent extends StatefulWidget {
 
 class _ExpandableContentState extends State<ExpandableContent>
     with SingleTickerProviderStateMixin {
-  static final Animatable<double> _easeInTween =
-      CurveTween(curve: Curves.easeIn);
+  // Tween used for ease-in and bounce effect
+  static final Animatable<double> _easeInOutTween =
+      CurveTween(curve: Curves.easeInOutQuad);
+  static final Animatable<double> _fadeTween =
+      Tween(begin: 0.0, end: 1.0).chain(CurveTween(curve: Curves.easeInOut));
+
   bool _expand = false;
 
-  //用来管理Animation
+  // Controller to manage the animation
   late AnimationController _controller;
 
-  //生成动画高度的值
+  // Generates the animation height values
   late Animation<double> _heightFactor;
+  late Animation<double> _fadeAnimation;
+
+  String translatedTitle = '';
+  String translatedDesc = '';
 
   @override
   void initState() {
     super.initState();
     _controller =
-        AnimationController(duration: Duration(milliseconds: 200), vsync: this);
-    _heightFactor = _controller.drive(_easeInTween);
-    _controller.addListener(() {
-      //监听动画值的变化
-      print(_heightFactor.value);
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+    _heightFactor = _controller.drive(_easeInOutTween);
+    _fadeAnimation = _controller.drive(_fadeTween);
+    _translateContent();
+  }
+
+  Future<void> _translateContent() async {
+    final translator = GoogleTranslator();
+    final titleTranslation =
+        await translator.translate(widget.mo.title, to: 'en');
+    final descTranslation =
+        await translator.translate(widget.mo.desc, to: 'en');
+    setState(() {
+      translatedTitle = titleTranslation.text;
+      translatedDesc = descTranslation.text;
     });
   }
 
@@ -66,12 +85,25 @@ class _ExpandableContentState extends State<ExpandableContent>
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //通过Expanded让Text获得最大宽度，以便显示省略号
+          // Use Expanded to allow Text to take maximum width for ellipsis
           Expanded(
-              child: Text(
-            widget.mo.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+              child: AnimatedCrossFade(
+            duration: Duration(milliseconds: 300),
+            firstChild: Text(
+              translatedTitle.isNotEmpty
+                  ? translatedTitle
+                  : widget.mo.title, // Fallback to original title
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            secondChild: Text(
+              translatedTitle.isNotEmpty
+                  ? translatedTitle
+                  : widget.mo.title, // Fallback to original title
+              style: TextStyle(fontSize: 14),
+            ),
+            crossFadeState:
+                _expand ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           )),
           Padding(padding: EdgeInsets.only(left: 15)),
           Icon(
@@ -90,10 +122,10 @@ class _ExpandableContentState extends State<ExpandableContent>
     setState(() {
       _expand = !_expand;
       if (_expand) {
-        //执行动画
+        // Play animation forward
         _controller.forward();
       } else {
-        //反向执行动画
+        // Reverse the animation
         _controller.reverse();
       }
     });
@@ -116,20 +148,28 @@ class _ExpandableContentState extends State<ExpandableContent>
 
   _buildDes() {
     var child = _expand
-        ? Text(widget.mo.desc,
-            style: TextStyle(fontSize: 12, color: Colors.grey))
+        ? FadeTransition(
+            opacity: _fadeAnimation,
+            child: Text(
+              translatedDesc.isNotEmpty
+                  ? translatedDesc
+                  : widget.mo.desc, // Fallback to original description
+              style: TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          )
         : null;
-    //构建动画的通用widget
+
+    // Build a generic widget for the animation
     return AnimatedBuilder(
       animation: _controller.view,
       child: child,
       builder: (BuildContext context, Widget? child) {
         return Align(
           heightFactor: _heightFactor.value,
-          //fix 从布局之上的位置开始展开
+          // Fix for expanding from the position above the layout
           alignment: Alignment.topCenter,
           child: Container(
-            //会撑满宽度后，让内容对其
+            // Stretches to full width and aligns content
             alignment: Alignment.topLeft,
             padding: EdgeInsets.only(top: 8),
             child: child,

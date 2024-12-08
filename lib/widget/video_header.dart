@@ -1,14 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:streamly/util/color.dart';
+import 'package:translator/translator.dart';
 
-import '../model/owner.dart';
+import '../model/video_model.dart';
 import '../util/format_util.dart';
 
-///Detail page, author widget
-class VideoHeader extends StatelessWidget {
+/// Detail page, author widget
+class VideoHeader extends StatefulWidget {
   final Owner owner;
 
   const VideoHeader({Key? key, required this.owner}) : super(key: key);
+
+  @override
+  _VideoHeaderState createState() => _VideoHeaderState();
+}
+
+class _VideoHeaderState extends State<VideoHeader> {
+  String translatedName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _translateName();
+  }
+
+  Future<void> _translateName() async {
+    final translator = GoogleTranslator();
+    var translation = await translator.translate(widget.owner.name!, to: 'en');
+    setState(() {
+      translatedName = translation.text;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +41,11 @@ class VideoHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              // Round header
+              // Circular avatar
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
                 child: Image.network(
-                  owner.face!,
+                  widget.owner.face!,
                   width: 30,
                   height: 30,
                 ),
@@ -33,14 +55,16 @@ class VideoHeader extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      owner.name!,
+                      translatedName.isNotEmpty
+                          ? translatedName
+                          : widget.owner.name!,
                       style: TextStyle(
                           fontSize: 13,
                           color: primaryColor,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '${countFormat(owner.fans!)} followers',
+                      '${countFormat(widget.owner.fans!)} followers',
                       style: TextStyle(fontSize: 10, color: Colors.grey),
                     )
                   ],

@@ -72,7 +72,7 @@ void changeStatusBar(
   ));
 }
 
-///带文字的小图标
+/// mini icon with text
 smallIconText(IconData iconData, var text) {
   var style = TextStyle(fontSize: 12, color: Colors.grey);
   if (text is int) {
@@ -91,7 +91,7 @@ smallIconText(IconData iconData, var text) {
   ];
 }
 
-///border线
+/// border line
 borderLine(BuildContext context, {bottom = true, top = false}) {
   BorderSide borderSide = BorderSide(width: 0.5, color: Colors.grey[200]!);
   return Border(
@@ -100,7 +100,7 @@ borderLine(BuildContext context, {bottom = true, top = false}) {
   );
 }
 
-///间距
+/// space
 SizedBox hiSpace({double height = 1, double width = 1}) {
   return SizedBox(height: height, width: width);
 }
