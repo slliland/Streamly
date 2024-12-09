@@ -1,5 +1,7 @@
 import 'package:streamly/http/dao/login_dao.dart';
 
+import '../../util/hi_constants.dart';
+
 enum HttpMethod { GET, POST, DELETE }
 // Basic Request (Rest full style)
 
@@ -46,8 +48,8 @@ abstract class BaseRequest {
 
   // Add header
   Map<String, dynamic> header = {
-    'course-flag': 'fa',
-    "auth-token": "ZmEtMjAyMS0wNC0xMiAyMToyMjoyMC1mYQ==fa",
+    HiConstants.authTokenK: HiConstants.authTokenV,
+    HiConstants.courseFlagK: HiConstants.courseFlagV
   };
   BaseRequest addHeader(String k, Object v) {
     header[k] = v.toString();

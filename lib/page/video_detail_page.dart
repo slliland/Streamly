@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_overlay/flutter_overlay.dart';
+import 'package:streamly/barrage/hi_socket.dart';
 import 'package:streamly/http/core/hi_error.dart';
 import 'package:streamly/http/dao/video_detail_dao.dart';
 import 'package:streamly/model/video_detail_mo.dart';
@@ -13,9 +15,13 @@ import 'package:streamly/model/video_model.dart';
 import 'package:translator/translator.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
+import '../barrage/barrage_input.dart';
+import '../barrage/barrage_switch.dart';
+import '../barrage/hi_barrage.dart';
 import '../http/dao/favorite_dao.dart';
 import '../http/dao/like_dao.dart';
 import '../util/color.dart';
+import '../util/hi_constants.dart';
 import '../util/toast.dart';
 import '../util/view_util.dart';
 import '../widget/expandable_content.dart';
@@ -36,10 +42,12 @@ class VideoDetailPage extends StatefulWidget {
 class _VideoDetailPageState extends State<VideoDetailPage>
     with TickerProviderStateMixin {
   late TabController _controller;
-  List tabs = ["Intro", "Comments: 288"];
+  List tabs = ["Intro", "Comm: 288"];
   VideoDetailMo? videoDetailMo;
   VideoModel? videoModel;
   List<VideoModel> videoList = [];
+  var _barrageKey = GlobalKey<HiBarrageState>();
+  bool _inoutShowing = false;
 
   @override
   void initState() {
@@ -100,6 +108,11 @@ class _VideoDetailPageState extends State<VideoDetailPage>
       model!.url!,
       cover: model.cover,
       overlayUI: videoAppBar(),
+      barrageUI: HiBarrage(
+          headers: HiConstants.headers(),
+          key: _barrageKey,
+          vid: model.vid,
+          autoPlay: true),
     );
   }
 
@@ -110,50 +123,49 @@ class _VideoDetailPageState extends State<VideoDetailPage>
       child: Container(
         height: 50,
         padding: EdgeInsets.symmetric(
-            horizontal: 10), // Adjusted padding for balance
+            horizontal: 5), // Minimize left and right padding
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             // TabBar on the left
-            Expanded(
-              child: TabBar(
-                controller: _controller,
-                isScrollable: true,
-                dividerColor: Colors.transparent,
-                indicator: UnderlineIndicator(
-                  strokeCap: StrokeCap.round, // Rounded ends for the underline
-                  borderSide: BorderSide(
-                    color:
-                        primaryColor, // Use your primary color for the indicator
-                    width: 3,
+            Flexible(
+              child: Container(
+                alignment: Alignment.centerLeft, // Align TabBar to the left
+                margin: EdgeInsets.only(
+                    right: 15), // Add space between TabBar and Button
+                child: TabBar(
+                  controller: _controller,
+                  isScrollable: true,
+                  dividerColor: Colors.transparent,
+                  indicator: UnderlineIndicator(
+                    strokeCap: StrokeCap.round,
+                    borderSide: BorderSide(
+                      color: primaryColor,
+                      width: 3,
+                    ),
+                    insets: EdgeInsets.symmetric(horizontal: 12),
                   ),
-                  insets: EdgeInsets.symmetric(
-                      horizontal: 12), // Space the underline inside tabs
+                  labelColor: primaryColor,
+                  unselectedLabelColor: Colors.grey,
+                  labelStyle: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  unselectedLabelStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                  tabs: tabs
+                      .map((tab) => Padding(
+                            padding:
+                                EdgeInsets.only(right: 5), // Adjust tab spacing
+                            child: Tab(text: tab),
+                          ))
+                      .toList(),
                 ),
-                labelColor: primaryColor,
-                unselectedLabelColor: Colors.grey,
-                labelStyle: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-                unselectedLabelStyle: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                ),
-                tabs: tabs
-                    .map((tab) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
-                          child: Tab(text: tab),
-                        ))
-                    .toList(),
               ),
             ),
-            // Static Icon on the right
-            Icon(
-              Icons.live_tv_rounded,
-              color: Colors.grey,
-              size: 24,
-            ),
+            // Space for Barrage Button
+            _buildBarrageBtn(),
           ],
         ),
       ),
@@ -268,5 +280,32 @@ class _VideoDetailPageState extends State<VideoDetailPage>
     return videoList
         .map((VideoModel mo) => VideoLargeCard(videoModel: mo))
         .toList();
+  }
+
+  _buildBarrageBtn() {
+    return BarrageSwitch(
+        inoutShowing: _inoutShowing,
+        onShowInput: () {
+          setState(() {
+            _inoutShowing = true;
+          });
+          HiOverlay.show(context, child: BarrageInput(
+            onTabClose: () {
+              setState(() {
+                _inoutShowing = false;
+              });
+            },
+          )).then((value) {
+            print('---input:$value');
+            _barrageKey.currentState!.send(value);
+          });
+        },
+        onBarrageSwitch: (open) {
+          if (open) {
+            _barrageKey.currentState!.play();
+          } else {
+            _barrageKey.currentState!.pause();
+          }
+        });
   }
 }

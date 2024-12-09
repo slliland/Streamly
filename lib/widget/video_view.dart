@@ -14,6 +14,7 @@ class VideoView extends StatefulWidget {
   final bool looping;
   final double aspectRatio;
   final Widget? overlayUI;
+  final Widget? barrageUI;
 
   const VideoView(this.url,
       {Key? key,
@@ -21,7 +22,8 @@ class VideoView extends StatefulWidget {
       this.autoPlay = false,
       this.looping = false,
       this.aspectRatio = 16 / 9,
-      this.overlayUI})
+      this.overlayUI,
+      this.barrageUI})
       : super(key: key);
 
   @override
@@ -29,15 +31,15 @@ class VideoView extends StatefulWidget {
 }
 
 class _VideoViewState extends State<VideoView> {
-  late VideoPlayerController _videoPlayerController; //video_player播放器Controller
-  late ChewieController _chewieController; //chewie播放器Controller
-  //封面
+  late VideoPlayerController _videoPlayerController; //video_player's Controller
+  late ChewieController _chewieController; //chewie player's Controller
+  // cover
   get _placeholder => FractionallySizedBox(
         widthFactor: 1,
         child: cachedImage(widget.cover),
       );
 
-  //进度条颜色配置
+  // Progress Bar color
   get _progressColors => ChewieProgressColors(
       playedColor: primaryColor,
       handleColor: primaryColor,
@@ -47,11 +49,11 @@ class _VideoViewState extends State<VideoView> {
   @override
   void initState() {
     super.initState();
-    //初始化播放器设置
+    // init player
     _videoPlayerController = VideoPlayerController.network(widget.url);
     _chewieController = ChewieController(
         videoPlayerController: _videoPlayerController,
-        //fix iOS无法正常退出全屏播放问题
+        //fix iOS can not exit full screen mode
         deviceOrientationsAfterFullScreen: [DeviceOrientation.portraitUp],
         aspectRatio: widget.aspectRatio,
         autoPlay: widget.autoPlay,
@@ -64,6 +66,7 @@ class _VideoViewState extends State<VideoView> {
           showBigPlayIcon: false,
           bottomGradient: blackLinearGradient(),
           overlayUI: widget.overlayUI,
+          barrageUI: widget.barrageUI,
         ),
         materialProgressColors: _progressColors);
   }
