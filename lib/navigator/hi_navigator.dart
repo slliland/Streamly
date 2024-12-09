@@ -3,17 +3,19 @@ import 'package:streamly/page/home_page.dart';
 import 'package:streamly/page/login_page.dart';
 import 'package:streamly/page/registration_page.dart';
 import 'package:streamly/page/video_detail_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../page/notice_page.dart';
 import 'bottom_navigator.dart';
 
-// Define if current page is at the back stage
 typedef RouteChangeListener(RouteStatusInfo current, RouteStatusInfo? pre);
-//Init Page
+
+/// Creates a page
 pageWrap(Widget child) {
   return MaterialPage(key: ValueKey(child.hashCode), child: child);
 }
 
-//Get current page's location on the page stack
+/// Gets the index of routeStatus in the page stack
 int getPageIndex(List<MaterialPage> pages, RouteStatus routeStatus) {
   for (int i = 0; i < pages.length; i++) {
     MaterialPage page = pages[i];
@@ -24,17 +26,19 @@ int getPageIndex(List<MaterialPage> pages, RouteStatus routeStatus) {
   return -1;
 }
 
-//Router Wrap
-enum RouteStatus { login, registration, home, detail, unknown }
+/// Custom route wrapper, route status
+enum RouteStatus { login, registration, home, detail, unknown, notice }
 
-//Get page's correspond route status
+/// Gets the RouteStatus corresponding to a page
 RouteStatus getStatus(MaterialPage page) {
   if (page.child is LoginPage) {
     return RouteStatus.login;
   } else if (page.child is RegistrationPage) {
     return RouteStatus.registration;
-  } else if (page.child is HomePage) {
+  } else if (page.child is BottomNavigator) {
     return RouteStatus.home;
+  } else if (page.child is NoticePage) {
+    return RouteStatus.notice;
   } else if (page.child is VideoDetailPage) {
     return RouteStatus.detail;
   } else {
@@ -42,7 +46,7 @@ RouteStatus getStatus(MaterialPage page) {
   }
 }
 
-//Route information
+/// Route information
 class RouteStatusInfo {
   final RouteStatus routeStatus;
   final Widget page;
@@ -50,40 +54,51 @@ class RouteStatusInfo {
   RouteStatusInfo(this.routeStatus, this.page);
 }
 
-///Listen to the route page jump
-///Sense whether the current page is pushed to the background
+/// Listens for route page transitions
+/// Monitors if the current page is sent to the background
 class HiNavigator extends _RouteJumpListener {
   static HiNavigator? _instance;
   RouteJumpListener? _routeJump;
   List<RouteChangeListener> _listeners = [];
   RouteStatusInfo? _current;
   RouteStatusInfo? _bottomTab;
+
   HiNavigator._();
+
   static HiNavigator getInstance() {
     _instance ??= HiNavigator._();
     return _instance!;
   }
 
-  // Tab switch monitoring at the bottom of the home page
+  /// Open H5 pages
+  Future<bool> openH5(String url) async {
+    var result = await canLaunch(url);
+    if (result) {
+      return await launch(url);
+    } else {
+      return Future.value(false);
+    }
+  }
+
+  /// Listener for switching home page bottom tabs
   void onBottomTabChange(int index, Widget page) {
     _bottomTab = RouteStatusInfo(RouteStatus.home, page);
     _notify(_bottomTab!);
   }
 
-  // Register Route Jump Logic
+  /// Registers route jump logic
   void registerRouteJump(RouteJumpListener routeJumpListener) {
     this._routeJump = routeJumpListener;
   }
 
-  // Monitor routing page jumps
+  /// Adds a listener for route page transitions
   void addListener(RouteChangeListener listener) {
-    // If current listener has not been added before
     if (!_listeners.contains(listener)) {
       _listeners.add(listener);
     }
   }
 
-  // Remove listener
+  /// Removes a listener
   void removeListener(RouteChangeListener listener) {
     _listeners.remove(listener);
   }
@@ -93,20 +108,17 @@ class HiNavigator extends _RouteJumpListener {
     _routeJump?.onJumpTo(routeStatus, args: args);
   }
 
-  // Notify routing page changes
+  /// Notifies of route page changes
   void notify(List<MaterialPage> currentPages, List<MaterialPage> prePages) {
-    // no changes
     if (currentPages == prePages) return;
-    // Current page is at the top of the stack
     var current =
         RouteStatusInfo(getStatus(currentPages.last), currentPages.last.child);
     _notify(current);
   }
 
-  // Implement notify
   void _notify(RouteStatusInfo current) {
     if (current.page is BottomNavigator && _bottomTab != null) {
-      // If the home page is opened, go to the specific tab on the home page
+      // If the opened page is the home page, specify the exact tab of the home page
       current = _bottomTab!;
     }
     print('hi_navigator:current:${current.page}');
@@ -118,15 +130,16 @@ class HiNavigator extends _RouteJumpListener {
   }
 }
 
-// For HiNavigator's implementation
+/// Abstract class for HiNavigator to implement
 abstract class _RouteJumpListener {
-  void onJumpTo(RouteStatus routeStatus, {Map args});
+  void onJumpTo(RouteStatus routeStatus, {Map? args});
 }
 
 typedef OnJumpTo = void Function(RouteStatus routeStatus, {Map? args});
 
-// Functions realised by jump logics
+/// Defines the functionality required for route jump logic
 class RouteJumpListener {
   final OnJumpTo onJumpTo;
+
   RouteJumpListener({required this.onJumpTo});
 }

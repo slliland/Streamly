@@ -104,3 +104,15 @@ borderLine(BuildContext context, {bottom = true, top = false}) {
 SizedBox hiSpace({double height = 1, double width = 1}) {
   return SizedBox(height: height, width: width);
 }
+
+/// Bottom shadow
+BoxDecoration? bottomBoxShadow() {
+  return BoxDecoration(color: Colors.white, boxShadow: [
+    BoxShadow(
+        color: Colors.grey[100]!,
+        offset: Offset(0, 5), // Offset on the x and y axes
+        blurRadius: 5.0, // Degree of shadow blur
+        spreadRadius: 1 // Degree of shadow spread
+        )
+  ]);
+}

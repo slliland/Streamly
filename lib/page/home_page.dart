@@ -32,7 +32,7 @@ class _HomePageState extends HiState<HomePage>
         TickerProviderStateMixin,
         WidgetsBindingObserver {
   var listener;
-  late TabController _controller;
+  TabController? _controller;
   List<CategoryMo> categoryList = [];
   List<BannerMo> bannerList = [];
   bool _isLoading = true;
@@ -41,10 +41,9 @@ class _HomePageState extends HiState<HomePage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _controller = TabController(length: categoryList.length, vsync: this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
       print('home:current:${current.page}');
-      print('home:pre:${pre.page}');
+      print('home:pre:${pre?.page}');
 
       /// Page is opened
       if (widget == current.page || current.page is HomePage) {
@@ -64,8 +63,8 @@ class _HomePageState extends HiState<HomePage>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     HiNavigator.getInstance().removeListener(this.listener);
-    // Must map with creation of the _controller
-    _controller.dispose();
+    // Dispose of the _controller
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -145,21 +144,24 @@ class _HomePageState extends HiState<HomePage>
             statusStyle: StatusStyle.DARK_CONTENT,
           ),
           Container(
-            color: Colors.white,
+            decoration: bottomBoxShadow(),
             child: _tabBar(),
           ),
           // Make page changes according to its tab
           Flexible(
-              child: TabBarView(
-                  controller: _controller,
-                  children: categoryList.map((tab) {
-                    return HomeTabPage(
-                      categoryName: tab.name ?? 'Unknown',
-                      bannerList: (tab.name == '推荐' || tab.name == 'recommend')
-                          ? bannerList
-                          : null,
-                    );
-                  }).toList()))
+              child: _controller == null
+                  ? Container()
+                  : TabBarView(
+                      controller: _controller,
+                      children: categoryList.map((tab) {
+                        return HomeTabPage(
+                          categoryName: tab.name ?? 'Unknown',
+                          bannerList:
+                              (tab.name == '推荐' || tab.name == 'recommend')
+                                  ? bannerList
+                                  : null,
+                        );
+                      }).toList()))
         ],
       ),
     ));
@@ -171,41 +173,47 @@ class _HomePageState extends HiState<HomePage>
 
   /// Customized Header Tabs
   _tabBar() {
-    return HiTab(
-      categoryList.map<Tab>((tab) {
-        return Tab(
-          text: tab.name,
-        );
-      }).toList(),
-      controller: _controller,
-      fontSize: 16,
-      borderWidth: 3,
-      unselectedLabelColor: Colors.black54,
-      insets: 13,
-    );
+    return _controller == null
+        ? Container()
+        : HiTab(
+            categoryList.map<Tab>((tab) {
+              return Tab(
+                text: tab.name,
+              );
+            }).toList(),
+            controller: _controller,
+            fontSize: 16,
+            borderWidth: 3,
+            unselectedLabelColor: Colors.black54,
+            insets: 13,
+          );
   }
 
   void loadData() async {
     try {
       HomeMo result = await HomeDao.get("推荐");
       print('loadData():$result');
-      if (result.categoryList != null) {
-        // Dispose of the old controller before creating a new one
-        // _controller.dispose();
-        _controller = TabController(
-            length: result.categoryList?.length ?? 0, vsync: this);
+      List<CategoryMo> categories = result.categoryList ?? [];
+      List<BannerMo> banners = result.bannerList ?? [];
+
+      updateBannerCovers(banners);
+
+      // Translate category names to English
+      final translator = GoogleTranslator();
+      for (var category in categories) {
+        category.name =
+            (await translator.translate(category.name ?? '', to: 'en')).text;
       }
-      List<BannerMo> updatedBannerList = result.bannerList ?? [];
-      updateBannerCovers(updatedBannerList);
 
       setState(() {
-        categoryList = result.categoryList ?? [];
-        bannerList = result.bannerList ?? [];
+        categoryList = categories;
+        bannerList = banners;
         _isLoading = false;
-      });
 
-      // Translate category names to English after updating the list
-      convertCategoryListToEnglish();
+        // Dispose of the old controller before creating a new one
+        _controller?.dispose();
+        _controller = TabController(length: categoryList.length, vsync: this);
+      });
     } on NeedAuth catch (e) {
       print(e);
       showWarnToast(e.message);
@@ -259,11 +267,16 @@ class _HomePageState extends HiState<HomePage>
             Icons.explore_outlined,
             color: Colors.grey,
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 12),
-            child: Icon(
-              Icons.mail_outline,
-              color: Colors.grey,
+          InkWell(
+            onTap: () {
+              HiNavigator.getInstance().onJumpTo(RouteStatus.notice);
+            },
+            child: Padding(
+              padding: EdgeInsets.only(left: 12),
+              child: Icon(
+                Icons.mail_outline,
+                color: Colors.grey,
+              ),
             ),
           ),
         ],

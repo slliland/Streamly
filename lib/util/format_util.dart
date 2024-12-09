@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 String countFormat(int count) {
   String formattedCount = "";
   if (count >= 1000000) {
@@ -19,4 +21,11 @@ String durationTransform(int seconds) {
     return '$m:0$s';
   }
   return '$m:$s';
+}
+
+String dateMonthAndDay(String dateStr) {
+  DateTime now = DateTime.now();
+  DateFormat formatter = DateFormat('MM-dd');
+  String formatted = formatter.format(now);
+  return formatted;
 }

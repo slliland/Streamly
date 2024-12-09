@@ -42,36 +42,36 @@ class HomeMo {
 }
 
 class BannerMo {
-  late String id;
-  late int sticky;
-  late String type;
-  late String title;
-  late String subtitle;
-  late String url;
-  late String cover;
-  late String createTime;
+  String? id;
+  String? sticky;
+  String? type;
+  String? title;
+  String? subtitle;
+  String? url;
+  String? cover;
+  String? createTime;
 
   BannerMo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    sticky = json['sticky'];
-    type = json['type'];
-    title = json['title'];
-    subtitle = json['subtitle'];
-    url = json['url'];
-    cover = json['cover'];
-    createTime = json['createTime'];
+    id = json['id']?.toString() ?? ''; // Default empty string for null values
+    sticky = json['sticky']?.toString() ?? '';
+    type = json['type'] ?? '';
+    title = json['title'] ?? 'Untitled';
+    subtitle = json['subtitle'] ?? 'No subtitle available';
+    url = json['url'] ?? '';
+    cover = json['cover'] ?? '';
+    createTime = json['createTime'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['sticky'] = this.sticky;
-    data['type'] = this.type;
-    data['title'] = this.title;
-    data['subtitle'] = this.subtitle;
-    data['url'] = this.url;
-    data['cover'] = this.cover;
-    data['createTime'] = this.createTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['sticky'] = sticky;
+    data['type'] = type;
+    data['title'] = title;
+    data['subtitle'] = subtitle;
+    data['url'] = url;
+    data['cover'] = cover;
+    data['createTime'] = createTime;
     return data;
   }
 }

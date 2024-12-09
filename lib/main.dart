@@ -4,6 +4,7 @@ import 'package:streamly/http/dao/login_dao.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
 import 'package:streamly/page/home_page.dart';
 import 'package:streamly/page/login_page.dart';
+import 'package:streamly/page/notice_page.dart';
 import 'package:streamly/page/registration_page.dart';
 import 'package:streamly/page/video_detail_page.dart';
 import 'package:streamly/model/video_model.dart';
@@ -98,6 +99,8 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
       page = pageWrap(VideoDetailPage(videoModel!));
     } else if (routeStatus == RouteStatus.registration) {
       page = pageWrap(const RegistrationPage());
+    } else if (routeStatus == RouteStatus.notice) {
+      page = pageWrap(NoticePage());
     } else if (routeStatus == RouteStatus.login) {
       page = pageWrap(const LoginPage());
     }

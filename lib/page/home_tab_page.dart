@@ -4,6 +4,7 @@ import 'package:streamly/model/home_mo.dart';
 import 'package:streamly/util/color.dart';
 import 'package:streamly/widget/hi_banner.dart';
 
+import '../core/hi_base_tab_state.dart';
 import '../http/core/hi_error.dart';
 import '../http/dao/home_dao.dart';
 import '../model/video_model.dart';
@@ -22,16 +23,10 @@ class HomeTabPage extends StatefulWidget {
   _HomeTabPageState createState() => _HomeTabPageState();
 }
 
-/// State class for the `HomeTabPage`, includes data loading and UI updates.
-class _HomeTabPageState extends State<HomeTabPage>
-    with AutomaticKeepAliveClientMixin {
-  List<VideoModel> videoList = []; // List of videos displayed on the page
-  int pageIndex = 1; // Current page index for pagination
-  bool _loading = false; // Tracks if a data load operation is ongoing
-  ScrollController _scrollController =
-      ScrollController(); // Scroll controller for detecting scroll events
-
-  // 分类名称映射表
+/// State class for the `HomeTabPage`, refactored using HiBaseTabState.
+class _HomeTabPageState
+    extends HiBaseTabState<HomeMo, VideoModel, HomeTabPage> {
+  // Category name mapping table
   final Map<String, String> categoryNameMap = {
     "recommend": "推荐",
     "funny": "搞笑",
@@ -45,115 +40,53 @@ class _HomeTabPageState extends State<HomeTabPage>
   };
 
   @override
-  void initState() {
-    super.initState();
-    // Add a scroll listener to detect when user scrolls near the bottom
-    _scrollController.addListener(() {
-      var dis = _scrollController.position.maxScrollExtent -
-          _scrollController.position.pixels;
-      print('dis:$dis');
-      // Load more data when the user scrolls near the bottom and no other loading is in progress
-      if (dis < 300 && !_loading) {
-        print('------_loadData---');
-        _loadData(loadMore: true);
-      }
-    });
-    _loadData(); // Initial data load
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController.dispose(); // Dispose of the scroll controller
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-    return RefreshIndicator(
-      onRefresh: _loadData, // Triggered when user pulls down to refresh
-      color: primaryColor, // Refresh indicator color
-      child: MediaQuery.removePadding(
-        removeTop: true, // Remove default padding at the top
-        context: context,
-        child: ScrollConfiguration(
-          behavior: ScrollBehavior(),
-          child: HiNestedScrollView(
-            controller: _scrollController,
-            itemCount: videoList.length,
-            padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-            headers: [
-              if (widget.bannerList != null)
-                Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: _banner(),
-                )
-            ],
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.82,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              return VideoCard(videoMo: videoList[index]);
-            },
+  Widget get contentChild => ScrollConfiguration(
+        behavior: ScrollBehavior(),
+        child: HiNestedScrollView(
+          controller: scrollController,
+          itemCount: dataList.length,
+          padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+          headers: [
+            if (widget.bannerList != null)
+              Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: _banner(),
+              )
+          ],
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.82,
           ),
+          itemBuilder: (BuildContext context, int index) {
+            return VideoCard(videoMo: dataList[index]);
+          },
         ),
-      ),
-    );
-  }
+      );
 
   /// Builds the banner widget.
-  _banner() {
+  Widget _banner() {
     return Padding(
         padding: EdgeInsets.only(left: 5, right: 5),
         child: HiBanner(widget.bannerList!));
   }
 
-  /// Loads data from the server with support for pagination and pull-to-refresh.
-  Future<void> _loadData({loadMore = false}) async {
-    _loading = true; // Indicate that loading is in progress
-    if (!loadMore) {
-      pageIndex = 1; // Reset page index for refresh
-    }
-    var currentIndex = pageIndex + (loadMore ? 1 : 0); // Determine current page
-    print('loading:currentIndex:$currentIndex');
-
-    // 使用映射表获取中文分类名
+  @override
+  Future<HomeMo> getData(int pageIndex) async {
+    // Use the mapping table to get the category name in Chinese
     String translatedCategoryName =
         categoryNameMap[widget.categoryName] ?? widget.categoryName;
 
     print('Mapped category name: $translatedCategoryName');
-    try {
-      // Fetch data from server using the mapped category name
-      HomeMo result = await HomeDao.get(translatedCategoryName,
-          pageIndex: currentIndex, pageSize: 10);
-      setState(() {
-        if (loadMore) {
-          if (result.videoList!.isNotEmpty) {
-            // Append new videos to the list
-            videoList = [...videoList, ...?result.videoList];
-            pageIndex++;
-          }
-        } else {
-          // Replace the list during refresh
-          videoList = result.videoList!;
-        }
-      });
-      // Allow some time before marking loading as complete
-      Future.delayed(Duration(milliseconds: 1000), () {
-        _loading = false;
-      });
-    } on NeedAuth catch (e) {
-      _loading = false;
-      print(e);
-      showWarnToast(e.message); // Show warning message
-    } on HiNetError catch (e) {
-      _loading = false;
-      print(e);
-      showWarnToast(e.message); // Show error message
-    }
+
+    return await HomeDao.get(
+      translatedCategoryName,
+      pageIndex: pageIndex,
+      pageSize: 10,
+    );
   }
 
   @override
-  bool get wantKeepAlive => true; // Preserve the state when switching tabs
+  List<VideoModel> parseList(HomeMo result) {
+    return result.videoList ?? [];
+  }
 }
