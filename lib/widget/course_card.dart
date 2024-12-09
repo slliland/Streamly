@@ -60,15 +60,41 @@ class CourseCard extends StatelessWidget {
       var height = width / 16 * 6;
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [...list.map((mo) => _buildCard(mo, width, height)).toSet()],
+        children: [
+          ...list.map((mo) => _buildCard(context, mo, width, height)).toSet()
+        ],
       );
     }).toList();
   }
 
-  _buildCard(Course mo, double width, double height) {
+  _buildCard(BuildContext context, Course mo, double width, double height) {
     return InkWell(
       onTap: () {
-        print('Navigating to H5');
+        // Show the image in a full-screen dialog
+        showDialog(
+          context: context,
+          builder: (context) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop(); // Close the dialog on tap
+              },
+              child: Container(
+                color: Colors.black,
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8), // Optional styling
+                    child: cachedImage(
+                      mo.cover,
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
       },
       child: Padding(
         padding: EdgeInsets.only(right: 5, bottom: 7),

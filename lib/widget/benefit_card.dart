@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:streamly/model/profile_mo.dart';
 
 import '../util/view_util.dart';
@@ -8,11 +9,24 @@ import 'hi_blur.dart';
 class BenefitCard extends StatelessWidget {
   final List<String> computerCourses;
 
-  const BenefitCard(
+  BenefitCard(
       {Key? key,
       required this.computerCourses,
       required List<Benefit> benefitList})
       : super(key: key);
+
+  final Map<String, String> courseLinks = {
+    'Introduction to Programming':
+        'https://ocw.mit.edu/courses/6-092-introduction-to-programming-in-java-january-iap-2010/',
+    'Data Structures & Algorithms':
+        'https://ocw.mit.edu/courses/6-851-advanced-data-structures-spring-2012/',
+    'Machine Learning Fundamentals':
+        'https://ocw.mit.edu/courses/6-867-machine-learning-fall-2006/',
+    'Database Management Systems':
+        'https://ocw.mit.edu/courses/6-830-database-systems-fall-2010/',
+    'Cloud Computing': 'https://www.cs.cmu.edu/~msakr/15619-s24/',
+    'Computer Networks': 'https://www.cs.cmu.edu/~prs/15-441-F17/syllabus.html',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +63,17 @@ class BenefitCard extends StatelessWidget {
 
   _buildCard(BuildContext context, String course, double width) {
     return InkWell(
-      onTap: () {
-        print('Selected course: $course');
+      onTap: () async {
+        final url = courseLinks[course];
+        if (url != null) {
+          if (await canLaunch(url)) {
+            await launch(url);
+          } else {
+            print('Could not launch $url');
+          }
+        } else {
+          print('No URL available for $course');
+        }
       },
       child: Container(
         width: width,

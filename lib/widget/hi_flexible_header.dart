@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../util/view_util.dart';
 
@@ -70,7 +71,19 @@ class _HiFlexibleHeaderState extends State<HiFlexibleHeader> {
           hiSpace(width: 8),
           Text(
             widget.name,
-            style: TextStyle(fontSize: 11),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[800], // Harmonize with the background
+              letterSpacing: 1.2,
+              shadows: [
+                Shadow(
+                  blurRadius: 2.0,
+                  color: Colors.grey.withOpacity(0.5),
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
           )
         ],
       ),
