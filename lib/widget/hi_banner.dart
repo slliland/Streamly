@@ -1,7 +1,9 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+import '../core/hi_base_tab_state.dart';
 import '../model/home_mo.dart';
 import '../model/video_model.dart';
 import '../navigator/hi_navigator.dart';
@@ -67,11 +69,22 @@ class HiBanner extends StatelessWidget {
   }
 }
 
-void handleBannerClick(BannerMo bannerMo) {
+void handleBannerClick(BannerMo bannerMo) async {
   if (bannerMo.type == 'video') {
     HiNavigator.getInstance().onJumpTo(RouteStatus.detail,
         args: {"videoMo": VideoModel(vid: bannerMo.url!)});
   } else {
-    HiNavigator.getInstance().openH5(bannerMo.url!);
+    // Lock orientation to portrait before opening the web page
+    await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    // Open the web page
+    bool result = await HiNavigator.getInstance().openH5(bannerMo.url!);
+
+    // Restore orientation settings after the web page is closed
+    await SystemChrome.setPreferredOrientations(DeviceOrientation.values);
+
+    if (!result) {
+      showWarnToast("Failed to open the web page.");
+    }
   }
 }

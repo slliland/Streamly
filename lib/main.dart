@@ -119,21 +119,27 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
         pages: pages,
         onPopPage: (route, result) {
           if (route.settings is MaterialPage) {
-            // Login page not logged in return interception
-            if ((route.settings as MaterialPage).child is LoginPage) {
-              if (!hasLogin) {
-                showWarnToast("Please Log in First");
-                return false;
-              }
+            final child = (route.settings as MaterialPage).child;
+
+            // If we are popping from the detail page, reset the videoModel
+            if (child is VideoDetailPage) {
+              videoModel = null;
+            }
+
+            // If we are popping from the login page without logging in
+            if (child is LoginPage && !hasLogin) {
+              showWarnToast("Please log in first");
+              return false;
             }
           }
-          // Execute return operation
+
+          // Execute the default pop logic
           if (!route.didPop(result)) {
             return false;
           }
+
           var tempPages = [...pages];
           pages.removeLast();
-          // Notify route changes
           HiNavigator.getInstance().notify(pages, tempPages);
           return true;
         },
