@@ -12,22 +12,22 @@ import "package:streamly/util/color.dart";
 import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
-///自定义播放器UI
-///支持空安全的皮肤，for chewie: > ^1.2.0
+/// Custom video player UI
+/// Supports null-safe UI for chewie: > ^1.2.0
 class MaterialControls extends StatefulWidget {
-  //初始化时是否展示loading
+  // Whether to show loading on initialization
   final bool showLoadingOnInitialize;
 
-  //是否展示大播放按钮
+  // Whether to show the large play button
   final bool showBigPlayIcon;
 
-  //视频浮层
+  // Video overlay UI
   final Widget? overlayUI;
 
-  //底部渐变
+  // Bottom gradient
   final Gradient? bottomGradient;
 
-  //弹幕浮层
+  // Barrage (bullet screen) overlay UI
   final Widget? barrageUI;
 
   const MaterialControls(
@@ -63,7 +63,7 @@ class _MaterialControlsState extends State<MaterialControls>
   late VideoPlayerController controller;
   ChewieController? _chewieController;
 
-  // We know that _chewieController is set in didChangeDependencies
+  // Access the chewie controller
   ChewieController get chewieController => _chewieController!;
 
   @override
@@ -107,7 +107,6 @@ class _MaterialControlsState extends State<MaterialControls>
                 )
               else
                 _buildHitArea(),
-              // _buildActionBar(),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
@@ -191,7 +190,7 @@ class _MaterialControlsState extends State<MaterialControls>
     );
   }
 
-  ///底部控制栏
+  /// Bottom control bar
   AnimatedOpacity _buildBottomBar(
     BuildContext context,
   ) {
@@ -203,7 +202,7 @@ class _MaterialControlsState extends State<MaterialControls>
       child: Container(
         height: barHeight,
         decoration: BoxDecoration(
-            //渐变
+            // Gradient
             gradient: widget.bottomGradient),
         child: Row(
           children: <Widget>[
@@ -223,7 +222,7 @@ class _MaterialControlsState extends State<MaterialControls>
     );
   }
 
-  ///暂停和播放icon
+  /// Pause and play icon
   GestureDetector _buildPlayPause(VideoPlayerController controller) {
     return GestureDetector(
       onTap: _playPause,
@@ -244,7 +243,7 @@ class _MaterialControlsState extends State<MaterialControls>
     );
   }
 
-  ///展开按钮
+  /// Expand button
   GestureDetector _buildExpandButton() {
     return GestureDetector(
       onTap: _onExpandCollapse,
@@ -286,8 +285,6 @@ class _MaterialControlsState extends State<MaterialControls>
                   _cancelAndRestartTimer();
                 }
               } else {
-                // _playPause();
-
                 setState(() {
                   notifier.hideStuff = true;
                 });
@@ -413,7 +410,7 @@ class _MaterialControlsState extends State<MaterialControls>
     });
   }
 
-  ///进度条
+  /// Progress bar
   Widget _buildProgressBar() {
     return Expanded(
       child: Padding(
@@ -445,7 +442,7 @@ class _MaterialControlsState extends State<MaterialControls>
     );
   }
 
-  ///浮层
+  /// Overlay
   _overlayUI() {
     return widget.overlayUI != null
         ? AnimatedOpacity(
