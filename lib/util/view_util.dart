@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../model/home_mo.dart';
 import 'format_util.dart';
 
 enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
@@ -115,4 +116,27 @@ BoxDecoration? bottomBoxShadow() {
         spreadRadius: 1 // Degree of shadow spread
         )
   ]);
+}
+
+void updateBannerCovers(List<BannerMo> bannerList) {
+  for (var banner in bannerList) {
+    if (banner.subtitle != null) {
+      if (banner.subtitle!.contains('全新Flutter从入门到进阶')) {
+        // Replace with a local image for the subtitle containing "全新Flutter从入门到进阶"
+        banner.cover = 'images/banner_eg_1.jpg';
+      } else if (banner.subtitle!.contains('ChatGPT + Flutter快速开发多端聊天机器人App')) {
+        // Replace with a local image for the subtitle containing "ChatGPT + Flutter"
+        banner.cover = 'images/banner_eg_2.jpg';
+      } else if (banner.subtitle!.contains('Flutter高级进阶实战 仿哔哩哔哩APP')) {
+        // Replace with a local image for the subtitle containing "Flutter高级进阶实战"
+        banner.cover = 'images/banner_eg_3.jpg';
+      } else if (banner.subtitle!.contains('移动端普通工程师到架构师的全方位蜕变')) {
+        // Replace with a local image for the subtitle containing "移动端普通工程师到架构师"
+        banner.cover = 'images/banner_eg_4.jpg';
+      } else {}
+    } else {
+      // Assign a default local image if subtitle is null
+      banner.cover = 'images/banner_default.jpg';
+    }
+  }
 }

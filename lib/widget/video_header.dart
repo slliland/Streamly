@@ -72,16 +72,27 @@ class _VideoHeaderState extends State<VideoHeader> {
               )
             ],
           ),
-          MaterialButton(
+          ElevatedButton(
             onPressed: () {
               print('---Follow---');
             },
-            color: primaryColor,
-            height: 24,
-            minWidth: 50,
+            style: ElevatedButton.styleFrom(
+              foregroundColor: Colors.white,
+              backgroundColor: primaryColor, // Text color
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20), // Rounded edges
+              ),
+              minimumSize: Size(50, 24), // Minimum size for height and width
+              padding: EdgeInsets.symmetric(
+                  horizontal: 16), // Padding for the button content
+              elevation: 4, // Add some shadow for depth
+            ),
             child: Text(
               '+ Follow',
-              style: TextStyle(color: Colors.white, fontSize: 13),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           )
         ],

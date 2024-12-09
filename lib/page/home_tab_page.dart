@@ -65,9 +65,10 @@ class _HomeTabPageState
 
   /// Builds the banner widget.
   Widget _banner() {
-    return Padding(
-        padding: EdgeInsets.only(left: 5, right: 5),
-        child: HiBanner(widget.bannerList!));
+    return HiBanner(
+      widget.bannerList!,
+      padding: EdgeInsets.only(left: 5, right: 5),
+    );
   }
 
   @override
