@@ -58,7 +58,7 @@ class _RankingPageState extends State<RankingPage>
       child: Center(
         // Use Center to ensure vertical and horizontal alignment
         child: Container(
-          decoration: bottomBoxShadow(),
+          decoration: bottomBoxShadow(context),
           child: _tabBar(),
         ),
       ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
 import 'package:streamly/util/format_util.dart';
 import 'package:streamly/util/view_util.dart';
 import 'package:translator/translator.dart';
+
+import '../provider/theme_provider.dart';
 
 /// VideoCard widget that displays a video thumbnail with metadata such as views, likes, and duration
 class VideoCard extends StatefulWidget {
@@ -78,6 +81,8 @@ class _VideoCardState extends State<VideoCard> {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = context.watch<ThemeProvider>();
+    Color textColor = themeProvider.isDark() ? Colors.white70 : Colors.black87;
     return InkWell(
       onTap: () {
         print(widget.videoMo.url);
@@ -94,7 +99,7 @@ class _VideoCardState extends State<VideoCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _itemImage(context),
-                _infoText(),
+                _infoText(textColor),
               ],
             ),
           ),
@@ -167,7 +172,7 @@ class _VideoCardState extends State<VideoCard> {
   }
 
   /// Builds the video title and owner information section
-  Widget _infoText() {
+  Widget _infoText(Color textColor) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
       child: Column(
@@ -178,18 +183,18 @@ class _VideoCardState extends State<VideoCard> {
             translatedTitle,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 14, color: Colors.black87),
+            style: TextStyle(fontSize: 14, color: textColor),
           ),
           const SizedBox(height: 5),
           // Owner Information
-          _owner(),
+          _owner(textColor),
         ],
       ),
     );
   }
 
   /// Builds the owner section with avatar and name
-  Widget _owner() {
+  Widget _owner(Color textColor) {
     return Row(
       children: [
         // Owner Avatar
@@ -209,7 +214,7 @@ class _VideoCardState extends State<VideoCard> {
             translatedOwnerName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 11, color: Colors.black87),
+            style: TextStyle(fontSize: 11, color: textColor),
           ),
         ),
         // More Options Icon

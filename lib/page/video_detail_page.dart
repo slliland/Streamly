@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
+import 'package:provider/provider.dart';
 import 'package:streamly/barrage/hi_socket.dart';
 import 'package:streamly/http/core/hi_error.dart';
 import 'package:streamly/http/dao/video_detail_dao.dart';
@@ -20,6 +21,7 @@ import '../barrage/barrage_switch.dart';
 import '../barrage/hi_barrage.dart';
 import '../http/dao/favorite_dao.dart';
 import '../http/dao/like_dao.dart';
+import '../provider/theme_provider.dart';
 import '../util/color.dart';
 import '../util/hi_constants.dart';
 import '../util/toast.dart';
@@ -48,10 +50,12 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   List<VideoModel> videoList = [];
   var _barrageKey = GlobalKey<HiBarrageState>();
   bool _inoutShowing = false;
+  late ThemeProvider _themeProvider;
 
   @override
   void initState() {
     super.initState();
+    _themeProvider = context.read<ThemeProvider>();
     // Black status bar, only on Android
     changeStatusBar(
         color: Colors.black, statusStyle: StatusStyle.LIGHT_CONTENT);
@@ -119,7 +123,7 @@ class _VideoDetailPageState extends State<VideoDetailPage>
   _buildTabNavigation() {
     return Material(
       elevation: 5,
-      shadowColor: Colors.grey[200],
+      shadowColor: _themeProvider.isDark() ? HiColor.dark_bg : Colors.grey[100],
       child: Container(
         height: 50,
         padding: EdgeInsets.symmetric(

@@ -35,21 +35,30 @@ class _NoticePageState extends HiBaseTabState<NoticeMo, BannerMo, NoticePage> {
   }
 
   _buildNavigationBar(BuildContext context) {
+    var isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return MyNavigationBar(
       height: 60, // Slightly increased height for better appearance
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Colors.blue.shade50,
-              Colors.blue.shade500
-            ], // Gradient background
+            colors: isDarkMode
+                ? [
+                    Colors.grey.shade900,
+                    Colors.grey.shade800,
+                  ] // Dark mode gradient
+                : [
+                    Colors.blue.shade50,
+                    Colors.blue.shade500,
+                  ], // Light mode gradient
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
+              color: isDarkMode
+                  ? Colors.black54.withOpacity(0.3)
+                  : Colors.grey.withOpacity(0.3),
               blurRadius: 6,
               offset: Offset(0, 3), // Slight shadow for depth
             ),
@@ -68,7 +77,8 @@ class _NoticePageState extends HiBaseTabState<NoticeMo, BannerMo, NoticePage> {
               },
               child: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.black, // Matches text for consistency
+                color:
+                    isDarkMode ? Colors.white : Colors.black, // Dynamic color
                 size: 20,
               ),
             ),
@@ -78,12 +88,14 @@ class _NoticePageState extends HiBaseTabState<NoticeMo, BannerMo, NoticePage> {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white, // Text color to stand out on the gradient
+                color: Colors.white, // Dynamic color
                 shadows: [
                   Shadow(
                     offset: Offset(0, 1),
                     blurRadius: 3,
-                    color: Colors.black26, // Subtle text shadow for depth
+                    color: isDarkMode
+                        ? Colors.black87 // Subtle shadow for dark mode
+                        : Colors.black26, // Subtle shadow for light mode
                   ),
                 ],
               ),

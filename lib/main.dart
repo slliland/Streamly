@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:streamly/db/hi_cache.dart';
 import 'package:streamly/http/dao/login_dao.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
+import 'package:streamly/page/dark_mode_page.dart';
 import 'package:streamly/page/home_page.dart';
 import 'package:streamly/page/login_page.dart';
 import 'package:streamly/page/notice_page.dart';
 import 'package:streamly/page/registration_page.dart';
 import 'package:streamly/page/video_detail_page.dart';
 import 'package:streamly/model/video_model.dart';
+import 'package:streamly/provider/hi_provider.dart';
+import 'package:streamly/provider/theme_provider.dart';
 import 'package:streamly/util/toast.dart';
 
 import 'http/core/hi_error.dart';
@@ -42,10 +46,16 @@ class _StreamAppState extends State<StreamApp> {
                     child: CircularProgressIndicator(),
                   ),
                 );
-          return MaterialApp(
-            home: widget,
-            theme: ThemeData(primarySwatch: Colors.cyan),
-          );
+          return MultiProvider(
+              providers: topProviders,
+              child: Consumer<ThemeProvider>(builder: (BuildContext context,
+                  ThemeProvider themeProvider, Widget? child) {
+                return MaterialApp(
+                    home: widget,
+                    theme: themeProvider.getTheme(),
+                    darkTheme: themeProvider.getTheme(isDarkMode: true),
+                    themeMode: themeProvider.getThemeMode());
+              }));
         });
   }
 }
@@ -103,6 +113,8 @@ class StreamRouteDelegate extends RouterDelegate<StreamRoutePath>
       page = pageWrap(NoticePage());
     } else if (routeStatus == RouteStatus.login) {
       page = pageWrap(const LoginPage());
+    } else if (routeStatus == RouteStatus.darkMode) {
+      page = pageWrap(DarkModePage());
     }
     //Not keep pages in stack, create a new page, then put it back
     tempPages = [...tempPages, page];

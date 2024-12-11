@@ -3,8 +3,14 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 import '../model/home_mo.dart';
+import '../navigator/hi_navigator.dart';
+import '../page/profile_page.dart';
+import '../page/video_detail_page.dart';
+import '../provider/theme_provider.dart';
+import 'color.dart';
 import 'format_util.dart';
 
 enum StatusStyle { LIGHT_CONTENT, DARK_CONTENT }
@@ -55,6 +61,22 @@ void changeStatusBar(
     {color = Colors.white,
     StatusStyle statusStyle = StatusStyle.DARK_CONTENT,
     BuildContext? context}) {
+  if (context != null) {
+    //fix Tried to listen to a value exposed with provider, from outside of the widget tree.
+    var themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    if (themeProvider.isDark()) {
+      statusStyle = StatusStyle.LIGHT_CONTENT;
+      color = HiColor.dark_bg;
+    }
+  }
+  var page = HiNavigator.getInstance().getCurrent()?.page;
+  //fix Android switch to profile, status bar changed to white's issue
+  if (page is ProfilePage) {
+    color = Colors.transparent;
+  } else if (page is VideoDetailPage) {
+    color = Colors.black;
+    statusStyle = StatusStyle.LIGHT_CONTENT;
+  }
   // Immersive status bar style
   var brightness;
   if (Platform.isIOS) {
@@ -107,7 +129,11 @@ SizedBox hiSpace({double height = 1, double width = 1}) {
 }
 
 /// Bottom shadow
-BoxDecoration? bottomBoxShadow() {
+BoxDecoration? bottomBoxShadow(BuildContext context) {
+  var themeProvider = context.watch<ThemeProvider>();
+  if (themeProvider.isDark()) {
+    return null;
+  }
   return BoxDecoration(color: Colors.white, boxShadow: [
     BoxShadow(
         color: Colors.grey[100]!,

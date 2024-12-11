@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:translator/translator.dart';
 
 import '../model/video_model.dart';
 import '../navigator/hi_navigator.dart';
+import '../provider/theme_provider.dart';
 import '../util/format_util.dart';
 import '../util/view_util.dart';
 
@@ -45,6 +47,7 @@ class _VideoLargeCardState extends State<VideoLargeCard> {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = context.watch<ThemeProvider>();
     // GestureDetector: more than single click
     return GestureDetector(
       onTap: () {
@@ -58,7 +61,7 @@ class _VideoLargeCardState extends State<VideoLargeCard> {
         decoration: BoxDecoration(border: borderLine(context)),
         child: Row(children: [
           _itemImage(context),
-          _buildContent(),
+          _buildContent(themeProvider),
         ]),
       ),
     );
@@ -83,7 +86,7 @@ class _VideoLargeCardState extends State<VideoLargeCard> {
                 ),
                 child: Text(
                   durationTransform(widget.videoModel.duration),
-                  style: TextStyle(color: Colors.white, fontSize: 10),
+                  style: TextStyle(fontSize: 10),
                 ),
               ))
         ],
@@ -91,7 +94,8 @@ class _VideoLargeCardState extends State<VideoLargeCard> {
     );
   }
 
-  _buildContent() {
+  _buildContent(ThemeProvider themeProvider) {
+    var textColor = themeProvider.isDark() ? Colors.grey : Colors.black87;
     return Expanded(
       child: Container(
         padding: EdgeInsets.only(top: 5, left: 8, bottom: 5),
@@ -104,7 +108,7 @@ class _VideoLargeCardState extends State<VideoLargeCard> {
                 translatedTitle.isNotEmpty
                     ? translatedTitle
                     : widget.videoModel.title, // Fallback to original title
-                style: TextStyle(fontSize: 12, color: Colors.black87),
+                style: TextStyle(fontSize: 12, color: textColor),
                 maxLines: 2, // Limit lines to prevent overflow
                 overflow: TextOverflow.ellipsis, // Show ellipsis for overflow
               ),

@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:streamly/util/color.dart';
 import 'package:underline_indicator/underline_indicator.dart';
+
+import '../provider/theme_provider.dart';
 
 /// Enhanced Tab changing widget for detail page
 class HiTab extends StatelessWidget {
@@ -24,11 +27,14 @@ class HiTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var themeProvider = context.watch<ThemeProvider>();
+    var _unselectedLabelColor =
+        themeProvider.isDark() ? Colors.white70 : unselectedLabelColor;
     return TabBar(
       controller: controller,
       isScrollable: true,
       labelColor: primaryColor,
-      unselectedLabelColor: unselectedLabelColor,
+      unselectedLabelColor: _unselectedLabelColor,
       labelStyle: TextStyle(
         fontSize: fontSize + 2, // Slightly larger for active tab
         fontWeight: FontWeight.bold,

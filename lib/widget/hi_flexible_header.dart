@@ -73,8 +73,7 @@ class _HiFlexibleHeaderState extends State<HiFlexibleHeader> {
             widget.name,
             style: TextStyle(
               fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[800], // Harmonize with the background
+              fontWeight: FontWeight.bold, // Harmonize with the background
               letterSpacing: 1.2,
               shadows: [
                 Shadow(

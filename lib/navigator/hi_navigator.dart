@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:streamly/page/dark_mode_page.dart';
 import 'package:streamly/page/home_page.dart';
 import 'package:streamly/page/login_page.dart';
 import 'package:streamly/page/registration_page.dart';
@@ -27,7 +28,15 @@ int getPageIndex(List<MaterialPage> pages, RouteStatus routeStatus) {
 }
 
 /// Custom route wrapper, route status
-enum RouteStatus { login, registration, home, detail, unknown, notice }
+enum RouteStatus {
+  login,
+  registration,
+  home,
+  detail,
+  unknown,
+  notice,
+  darkMode
+}
 
 /// Gets the RouteStatus corresponding to a page
 RouteStatus getStatus(MaterialPage page) {
@@ -41,6 +50,8 @@ RouteStatus getStatus(MaterialPage page) {
     return RouteStatus.notice;
   } else if (page.child is VideoDetailPage) {
     return RouteStatus.detail;
+  } else if (page.child is DarkModePage) {
+    return RouteStatus.darkMode;
   } else {
     return RouteStatus.unknown;
   }
@@ -68,6 +79,10 @@ class HiNavigator extends _RouteJumpListener {
   static HiNavigator getInstance() {
     _instance ??= HiNavigator._();
     return _instance!;
+  }
+
+  RouteStatusInfo? getCurrent() {
+    return _current;
   }
 
   /// Open H5 pages

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:streamly/util/view_util.dart';
+import 'package:streamly/widget/dark_mode_item.dart';
 import 'package:streamly/widget/hi_blur.dart';
 import 'package:streamly/widget/hi_flexible_header.dart';
 
@@ -87,6 +88,7 @@ class _ProfilePageState extends State<ProfilePage>
           'Computer Networks',
         ],
       ),
+      DarkModelItem()
     ];
   }
 

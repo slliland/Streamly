@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:streamly/core/hi_state.dart';
 import 'package:streamly/http/dao/home_dao.dart';
 import 'package:streamly/model/home_mo.dart';
@@ -12,6 +13,7 @@ import 'package:underline_indicator/underline_indicator.dart';
 import 'package:streamly/widget/navigation_bar.dart';
 
 import '../http/core/hi_error.dart';
+import '../provider/theme_provider.dart';
 import '../util/color.dart';
 import '../util/toast.dart';
 import '../util/view_util.dart';
@@ -36,12 +38,14 @@ class _HomePageState extends HiState<HomePage>
   List<CategoryMo> categoryList = [];
   List<BannerMo> bannerList = [];
   bool _isLoading = true;
+  Widget? _currentPage;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     HiNavigator.getInstance().addListener(this.listener = (current, pre) {
+      this._currentPage = current.page;
       print('home:current:${current.page}');
       print('home:pre:${pre?.page}');
 
@@ -68,6 +72,13 @@ class _HomePageState extends HiState<HomePage>
     super.dispose();
   }
 
+  //monitor system dark mode's changes
+  @override
+  void didChangePlatformBrightness() {
+    context.read<ThemeProvider>().darModeChange();
+    super.didChangePlatformBrightness();
+  }
+
   /// Monitor lifecycle changes
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -80,7 +91,12 @@ class _HomePageState extends HiState<HomePage>
       case AppLifecycleState.resumed:
         // Switch from background to foreground, can be viewed
         // Fix status bar changed to white's problem
-        changeStatusBar();
+        if (!(_currentPage is VideoDetailPage)) {
+          changeStatusBar(
+              color: Colors.white,
+              statusStyle: StatusStyle.DARK_CONTENT,
+              context: context);
+        }
         break;
       case AppLifecycleState.paused:
         // Handle paused state if necessary
@@ -120,7 +136,7 @@ class _HomePageState extends HiState<HomePage>
             statusStyle: StatusStyle.DARK_CONTENT,
           ),
           Container(
-            decoration: bottomBoxShadow(),
+            decoration: bottomBoxShadow(context),
             child: _tabBar(),
           ),
           // Make page changes according to its tab
