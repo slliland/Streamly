@@ -12,6 +12,7 @@ import 'package:streamly/page/video_detail_page.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/provider/hi_provider.dart';
 import 'package:streamly/provider/theme_provider.dart';
+import 'package:streamly/util/hi_defend.dart';
 import 'package:streamly/util/toast.dart';
 
 import 'http/core/hi_error.dart';
@@ -19,7 +20,7 @@ import 'http/core/hi_net.dart';
 import 'navigator/bottom_navigator.dart';
 
 void main() {
-  runApp(StreamApp());
+  HiDefend().run(StreamApp());
 }
 
 class StreamApp extends StatefulWidget {

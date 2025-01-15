@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:streamly/core/hi_state.dart';
@@ -255,9 +257,14 @@ class _HomePageState extends HiState<HomePage>
               ),
             ),
           )),
-          Icon(
-            Icons.explore_outlined,
-            color: Colors.grey,
+          InkWell(
+            onTap: () {
+              _mockCrash();
+            },
+            child: Icon(
+              Icons.explore_outlined,
+              color: Colors.grey,
+            ),
           ),
           InkWell(
             onTap: () {
@@ -274,5 +281,37 @@ class _HomePageState extends HiState<HomePage>
         ],
       ),
     );
+  }
+
+  /// Simulate Crash
+  void _mockCrash() async {
+    // Use try-catch to capture synchronous exceptions
+    try {
+      throw StateError('This is a dart exception.');
+    } catch (e) {
+      print(e);
+    }
+    // Use catchError to capture asynchronous exceptions
+    Future.delayed(Duration(seconds: 1))
+        .then((value) =>
+            throw StateError('This is first Dart exception in Future.'))
+        .catchError((e) => print(e));
+
+    try {
+      await Future.delayed(Duration(seconds: 1))
+          .then((value) =>
+              throw StateError('This is second Dart exception in Future.'))
+          .catchError((e) => print(e));
+    } catch (e) {
+      print(e);
+    }
+    runZonedGuarded(() {
+      throw StateError('runZonedGuarded:This is a dart exception.');
+    }, (e, s) => print(e));
+    runZonedGuarded(() {
+      Future.delayed(Duration(seconds: 1)).then((value) => throw StateError(
+          'runZonedGuarded:This is first Dart exception in Future.'));
+    }, (e, s) => print(e));
+    throw StateError('main:This is second Dart exception.');
   }
 }

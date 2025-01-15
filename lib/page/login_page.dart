@@ -4,10 +4,9 @@ import 'package:streamly/http/core/hi_error.dart';
 import 'package:streamly/http/dao/login_dao.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
 import 'package:streamly/util/string_util.dart';
-import 'package:streamly/widget/appbar.dart';
+import 'package:streamly/util/toast.dart';
 import 'package:streamly/widget/login_button.dart';
 import 'package:streamly/widget/login_input.dart';
-import '../util/toast.dart';
 import '../widget/login_effect.dart';
 
 class LoginPage extends StatefulWidget {
@@ -53,15 +52,42 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      appBar: appBar('Login with password', 'Register', () {
-        HiNavigator.getInstance().onJumpTo(RouteStatus.login);
-      }),
+      appBar: AppBar(
+        title: Text(
+          'Login with Password',
+          style: TextStyle(
+            color: isDarkMode ? Colors.white : Colors.black,
+          ),
+        ),
+        backgroundColor: isDarkMode ? Colors.grey[900] : Colors.white,
+        iconTheme: IconThemeData(
+          color: isDarkMode ? Colors.white : Colors.black,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              HiNavigator.getInstance().onJumpTo(RouteStatus.registration);
+            },
+            child: Text(
+              'Register',
+              style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.black,
+              ),
+            ),
+          ),
+        ],
+      ),
       body: Container(
+        color: isDarkMode ? Colors.grey[850] : Colors.white,
         padding: EdgeInsets.symmetric(horizontal: 20),
         child: ListView(
           children: [
-            LoginEffect(protect: protect),
+            LoginEffect(
+              protect: protect,
+            ),
             LoginInput(
               'User Name',
               'Please Enter Your User Name',
@@ -69,9 +95,9 @@ class _LoginPageState extends State<LoginPage> {
                 userName = text;
                 checkInput();
               },
-              initialValue: userName, // Show saved username if available
+              initialValue: userName,
             ),
-            SizedBox(height: 16), // Add spacing
+            SizedBox(height: 16),
             LoginInput(
               'Password',
               'Please Enter Your Password',
@@ -95,8 +121,13 @@ class _LoginPageState extends State<LoginPage> {
                       rememberMe = value!;
                     });
                   },
+                  activeColor: isDarkMode ? Colors.blueAccent : Colors.blue,
                 ),
-                Text('Remember Me'),
+                Text(
+                  'Remember Me',
+                  style: TextStyle(
+                      color: isDarkMode ? Colors.white : Colors.black),
+                ),
               ],
             ),
             Padding(
@@ -125,8 +156,7 @@ class _LoginPageState extends State<LoginPage> {
       if (result['code'] == 0) {
         showToast('Login successful');
         await _saveUsername(); // Save the username if "Remember Me" is checked
-        HiNavigator.getInstance()
-            .onJumpTo(RouteStatus.home); // Use Hinavagator to jump back
+        HiNavigator.getInstance().onJumpTo(RouteStatus.home);
       } else {
         showWarnToast(result['msg']);
       }
