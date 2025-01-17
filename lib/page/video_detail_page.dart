@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
+import 'package:hi_barrage/hi_barrage.dart';
 import 'package:provider/provider.dart';
-import 'package:streamly/barrage/hi_socket.dart';
 import 'package:hi_net/core/hi_error.dart';
 import 'package:streamly/http/dao/video_detail_dao.dart';
 import 'package:streamly/model/video_detail_mo.dart';
@@ -17,8 +17,7 @@ import 'package:translator/translator.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 
 import '../barrage/barrage_input.dart';
-import '../barrage/barrage_switch.dart';
-import '../barrage/hi_barrage.dart';
+import '../widget/barrage_switch.dart';
 import '../http/dao/favorite_dao.dart';
 import '../http/dao/like_dao.dart';
 import '../provider/theme_provider.dart';

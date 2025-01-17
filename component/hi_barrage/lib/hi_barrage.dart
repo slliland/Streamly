@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'barrage_item.dart';
-import '../model/barrage_model.dart';
+import 'barrage_model.dart';
 import 'barrage_view_util.dart';
 import 'hi_socket.dart';
 import 'ibarrage.dart';

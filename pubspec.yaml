@@ -33,6 +33,8 @@ dependencies:
   # Component configurations
   hi_net:
     path: ./component/hi_net
+  hi_barrage:
+    path: ./component/hi_barrage
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -52,7 +54,6 @@ dependencies:
   video_player: ^2.9.2
   intl: ^0.20.1
   url_launcher: ^6.3.1
-  web_socket_channel: ^3.0.1
   flutter_overlay: ^1.0.0
   provider: ^6.1.2
 

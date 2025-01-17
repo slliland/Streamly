@@ -250,6 +250,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  hi_barrage:
+    dependency: "direct main"
+    description:
+      path: "component/hi_barrage"
+      relative: true
+    source: path
+    version: "0.0.1"
   hi_net:
     dependency: "direct main"
     description:
@@ -860,7 +867,7 @@ packages:
     source: hosted
     version: "0.1.6"
   web_socket_channel:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: web_socket_channel
       sha256: "9f187088ed104edd8662ca07af4b124465893caf063ba29758f97af57e61da8f"

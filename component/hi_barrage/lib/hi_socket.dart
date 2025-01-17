@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:streamly/http/dao/login_dao.dart';
 import 'package:web_socket_channel/io.dart';
-
-import '../model/barrage_model.dart';
-import '../util/hi_constants.dart';
+import 'barrage_model.dart';
 
 /// Responsible for WebSocket communication with the backend
 class HiSocket implements ISocket {

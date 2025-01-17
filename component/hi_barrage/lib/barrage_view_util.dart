@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../model/barrage_model.dart';
+import 'barrage_model.dart';
 
 class BarrageViewUtil {
   // If you want to define barrage styles, you can customize them here based on the type of barrage
