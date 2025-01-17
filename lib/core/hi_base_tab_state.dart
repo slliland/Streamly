@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hi_net/core/hi_error.dart';
 import 'package:lottie/lottie.dart';
 
-import '../http/core/hi_error.dart';
 import '../widget/loading_container.dart';
 
 /// Base tab state for pages with pagination, refresh, and Lottie loading animation

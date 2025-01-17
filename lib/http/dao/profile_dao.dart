@@ -1,5 +1,6 @@
+import 'package:hi_net/hi_net.dart';
+
 import '../../model/profile_mo.dart';
-import '../core/hi_net.dart';
 import '../request/profile_request.dart';
 
 class ProfileDao {

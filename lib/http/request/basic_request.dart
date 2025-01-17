@@ -1,58 +1,20 @@
-import 'package:streamly/http/dao/login_dao.dart';
+import 'package:hi_net/request/hi_base_request.dart';
 
 import '../../util/hi_constants.dart';
+import '../dao/login_dao.dart';
 
-enum HttpMethod { GET, POST, DELETE }
-// Basic Request (Rest full style)
-
-abstract class BaseRequest {
-  var pathParams;
-  var useHttps = true;
-  String authority() {
-    return "api.devio.org";
-  }
-
-  HttpMethod httpMethod();
-  String path();
+abstract class BaseRequest extends HiBaseRequest {
+  @override
   String url() {
-    Uri uri;
-    var pathstr = path();
-    if (pathParams != null) {
-      if (path().endsWith("/")) {
-        pathstr = "${path()}$pathParams";
-      } else {
-        pathstr = "${path()}/$pathParams";
-      }
-    }
-    // Switch from http to https
-    if (useHttps) {
-      uri = Uri.https(authority(), pathstr, params);
-    } else {
-      uri = Uri.http(authority(), pathstr, params);
-    }
     if (needLogin()) {
       // Need Login with Token
       addHeader(LoginDao.BOARDING_PASS, LoginDao.getBoardingPass());
     }
-    print('uri:${uri.toString()}');
-    return uri.toString();
+    return super.url();
   }
 
-  bool needLogin();
-  Map<String, String> params = Map();
-  // Add params
-  BaseRequest add(String k, Object v) {
-    params[k] = v.toString();
-    return this;
-  }
-
-  // Add header
   Map<String, dynamic> header = {
     HiConstants.authTokenK: HiConstants.authTokenV,
     HiConstants.courseFlagK: HiConstants.courseFlagV
   };
-  BaseRequest addHeader(String k, Object v) {
-    header[k] = v.toString();
-    return this;
-  }
 }

@@ -3,9 +3,8 @@ import 'package:flutter_nested/flutter_nested.dart';
 import 'package:streamly/model/home_mo.dart';
 import 'package:streamly/util/color.dart';
 import 'package:streamly/widget/hi_banner.dart';
-
+import 'package:hi_net/core/hi_error.dart';
 import '../core/hi_base_tab_state.dart';
-import '../http/core/hi_error.dart';
 import '../http/dao/home_dao.dart';
 import '../model/video_model.dart';
 import '../util/toast.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:streamly/http/core/hi_error.dart';
+import 'package:hi_net/core/hi_error.dart';
 import 'package:streamly/http/dao/login_dao.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
 import 'package:streamly/util/string_util.dart';

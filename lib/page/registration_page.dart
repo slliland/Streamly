@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
-import '../http/core/hi_error.dart';
+import 'package:hi_net/core/hi_error.dart';
 import '../http/dao/login_dao.dart';
 import '../util/toast.dart';
 import '../widget/appBar.dart';

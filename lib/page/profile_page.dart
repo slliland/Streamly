@@ -5,7 +5,7 @@ import 'package:streamly/widget/hi_blur.dart';
 import 'package:streamly/widget/hi_flexible_header.dart';
 
 import '../core/hi_base_tab_state.dart';
-import '../http/core/hi_error.dart';
+import 'package:hi_net/core/hi_error.dart';
 import '../http/dao/profile_dao.dart';
 import '../model/profile_mo.dart';
 import '../widget/benefit_card.dart';

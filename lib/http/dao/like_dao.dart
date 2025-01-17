@@ -1,4 +1,4 @@
-import '../core/hi_net.dart';
+import 'package:hi_net/hi_net.dart';
 import '../request/basic_request.dart';
 import '../request/cancel_like_request.dart';
 import '../request/like_request.dart';

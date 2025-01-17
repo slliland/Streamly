@@ -1,9 +1,8 @@
+import 'package:hi_net/hi_net.dart';
 import 'package:streamly/db/hi_cache.dart';
 import 'package:streamly/http/request/basic_request.dart';
 import 'package:streamly/http/request/login_request.dart';
 import 'package:streamly/http/request/registration_request.dart';
-
-import '../core/hi_net.dart';
 
 class LoginDao {
   static const BOARDING_PASS = "boarding-pass";

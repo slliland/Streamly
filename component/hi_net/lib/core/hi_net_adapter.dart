@@ -1,9 +1,10 @@
 // General Net Return Format
-import 'package:streamly/http/request/basic_request.dart';
 import 'dart:convert';
 
+import '../request/hi_base_request.dart';
+
 abstract class HiNetAdapter {
-  Future<HiNetResponse<T>> send<T>(BaseRequest request);
+  Future<HiNetResponse<T>> send<T>(HiBaseRequest request);
 }
 
 class HiNetResponse<T> {
@@ -16,7 +17,7 @@ class HiNetResponse<T> {
   });
 
   T data;
-  BaseRequest request;
+  HiBaseRequest request;
   int statusCode;
   String statusMessage;
   dynamic extra;

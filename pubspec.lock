@@ -130,7 +130,7 @@ packages:
     source: hosted
     version: "0.7.10"
   dio:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: dio
       sha256: "5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260"
@@ -250,6 +250,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  hi_net:
+    dependency: "direct main"
+    description:
+      path: "component/hi_net"
+      relative: true
+    source: path
+    version: "0.0.1"
   html:
     dependency: transitive
     description:

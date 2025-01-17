@@ -1,5 +1,6 @@
+import 'package:hi_net/hi_net.dart';
+
 import '../../model/notice_mo.dart';
-import '../core/hi_net.dart';
 import '../request/notice_request.dart';
 
 class NoticeDao {

@@ -1,5 +1,6 @@
+import 'package:hi_net/hi_net.dart';
+
 import '../../model/ranking_mo.dart';
-import '../core/hi_net.dart';
 import '../request/basic_request.dart';
 import '../request/cancel_favorite_request.dart';
 import '../request/favorite_list_request.dart';

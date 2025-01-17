@@ -1,10 +1,9 @@
-import 'package:streamly/http/core/dio_adapter.dart';
-import 'package:streamly/http/core/hi_error.dart';
-import 'package:streamly/http/core/hi_net_adapter.dart';
-import 'package:streamly/http/core/mock_adapter.dart';
-import 'package:streamly/http/request/basic_request.dart';
+import 'package:hi_net/request/hi_base_request.dart';
 
-import 'hi_interceptor.dart';
+import 'core/dio_adapter.dart';
+import 'core/hi_error.dart';
+import 'core/hi_interceptor.dart';
+import 'core/hi_net_adapter.dart';
 
 /// Network Manager Class
 /// This class provides an abstraction layer for managing network requests and error handling.
@@ -28,7 +27,7 @@ class HiNet {
 
   /// Executes a network request and handles the response or errors.
   /// [request]: The network request to execute.
-  Future fire(BaseRequest request) async {
+  Future fire(HiBaseRequest request) async {
     HiNetResponse? response;
     var error;
 
@@ -88,7 +87,7 @@ class HiNet {
   /// Sends a network request using the configured adapter (e.g., Dio).
   /// [request]: The network request to execute.
   /// Returns a [HiNetResponse] containing the response data.
-  Future<HiNetResponse<T>> send<T>(BaseRequest request) async {
+  Future<HiNetResponse<T>> send<T>(HiBaseRequest request) async {
     /// Uses Dio as the HTTP adapter to send the request.
     HiNetAdapter adapter = DioAdapter();
     return adapter.send(request);

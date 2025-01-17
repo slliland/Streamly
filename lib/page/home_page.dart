@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hi_net/core/hi_error.dart';
 import 'package:provider/provider.dart';
 import 'package:streamly/core/hi_state.dart';
 import 'package:streamly/http/dao/home_dao.dart';
@@ -13,8 +14,6 @@ import 'package:streamly/widget/loading_container.dart';
 import 'package:translator/translator.dart';
 import 'package:underline_indicator/underline_indicator.dart';
 import 'package:streamly/widget/navigation_bar.dart';
-
-import '../http/core/hi_error.dart';
 import '../provider/theme_provider.dart';
 import '../util/color.dart';
 import '../util/toast.dart';

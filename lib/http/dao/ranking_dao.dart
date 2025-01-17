@@ -1,5 +1,6 @@
+import 'package:hi_net/hi_net.dart';
+
 import '../../model/ranking_mo.dart';
-import '../core/hi_net.dart';
 import '../request/ranking_request.dart';
 
 class RankingDao {

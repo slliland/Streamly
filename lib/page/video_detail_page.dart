@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:provider/provider.dart';
 import 'package:streamly/barrage/hi_socket.dart';
-import 'package:streamly/http/core/hi_error.dart';
+import 'package:hi_net/core/hi_error.dart';
 import 'package:streamly/http/dao/video_detail_dao.dart';
 import 'package:streamly/model/video_detail_mo.dart';
 import 'package:streamly/model/video_model.dart';

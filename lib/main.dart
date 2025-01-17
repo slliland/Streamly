@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hi_net/core/hi_error.dart';
+import 'package:hi_net/hi_net.dart';
 import 'package:provider/provider.dart';
 import 'package:streamly/db/hi_cache.dart';
 import 'package:streamly/http/dao/login_dao.dart';
@@ -14,9 +16,6 @@ import 'package:streamly/provider/hi_provider.dart';
 import 'package:streamly/provider/theme_provider.dart';
 import 'package:streamly/util/hi_defend.dart';
 import 'package:streamly/util/toast.dart';
-
-import 'http/core/hi_error.dart';
-import 'http/core/hi_net.dart';
 import 'navigator/bottom_navigator.dart';
 
 void main() {

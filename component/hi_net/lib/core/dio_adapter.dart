@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:streamly/http/core/hi_error.dart';
-import 'package:streamly/http/core/hi_net_adapter.dart';
-import 'package:streamly/http/request/basic_request.dart';
+
+import '../request/hi_base_request.dart';
+import 'hi_error.dart';
+import 'hi_net_adapter.dart';
 
 // Dio Adapter
 class DioAdapter extends HiNetAdapter {
   @override
-  Future<HiNetResponse<T>> send<T>(BaseRequest request) async {
+  Future<HiNetResponse<T>> send<T>(HiBaseRequest request) async {
     Response<dynamic>? response;
     Options options = Options(headers: request.header);
     var error;
@@ -42,7 +43,7 @@ class DioAdapter extends HiNetAdapter {
   }
 
   // Construct HiNetResponse
-  HiNetResponse buildRes(Response<dynamic> response, BaseRequest request) {
+  HiNetResponse buildRes(Response<dynamic> response, HiBaseRequest request) {
     return HiNetResponse(
       data: response.data,
       request: request,

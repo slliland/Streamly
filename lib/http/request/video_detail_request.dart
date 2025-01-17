@@ -1,3 +1,5 @@
+import 'package:hi_net/request/hi_base_request.dart';
+
 import 'basic_request.dart';
 
 class VideoDetailRequest extends BaseRequest {
