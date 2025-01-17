@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../util/view_util.dart';
 
-appBar(String title, String rightTitle, VoidCallback? rightButtonClick) {
+appBar(String title, String rightTitle, VoidCallback? rightButtonClick, {key}) {
   return AppBar(
     //Title at left
     centerTitle: false,
@@ -15,6 +15,7 @@ appBar(String title, String rightTitle, VoidCallback? rightButtonClick) {
     ),
     actions: [
       InkWell(
+        key: key,
         onTap: rightButtonClick,
         child: Container(
           padding: EdgeInsets.only(left: 15, right: 15),

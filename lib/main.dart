@@ -20,7 +20,7 @@ import 'http/core/hi_net.dart';
 import 'navigator/bottom_navigator.dart';
 
 void main() {
-  HiDefend().run(StreamApp());
+  runApp(StreamApp());
 }
 
 class StreamApp extends StatefulWidget {

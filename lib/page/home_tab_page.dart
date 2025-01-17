@@ -40,31 +40,24 @@ class _HomeTabPageState
   };
 
   @override
-  Widget get contentChild => ScrollConfiguration(
-        behavior: ScrollBehavior(),
-        child: HiNestedScrollView(
-          controller: scrollController,
-          itemCount: dataList.length,
-          padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-          headers: [
-            if (widget.bannerList != null)
-              Padding(
-                padding: EdgeInsets.only(bottom: 8),
-                child: _banner(),
-              )
-          ],
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.82,
-          ),
-          itemBuilder: (BuildContext context, int index) {
-            return VideoCard(videoMo: dataList[index]);
-          },
-        ),
-      );
+  get contentChild => HiNestedScrollView(
+      controller: scrollController,
+      itemCount: dataList.length,
+      padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+      headers: [
+        if (widget.bannerList != null)
+          Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: _banner(widget.bannerList!))
+      ],
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, childAspectRatio: 0.82),
+      itemBuilder: (BuildContext context, int index) {
+        return VideoCard(videoMo: dataList[index]);
+      });
 
   /// Builds the banner widget.
-  Widget _banner() {
+  Widget _banner(List<BannerMo> list) {
     return HiBanner(
       widget.bannerList!,
       padding: EdgeInsets.only(left: 5, right: 5),
