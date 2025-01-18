@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_overlay/flutter_overlay.dart';
 import 'package:hi_barrage/hi_barrage.dart';
+import 'package:hi_video/video_view.dart';
 import 'package:provider/provider.dart';
 import 'package:hi_net/core/hi_error.dart';
 import 'package:streamly/http/dao/video_detail_dao.dart';
@@ -10,7 +11,6 @@ import 'package:streamly/model/video_detail_mo.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/widget/appBar.dart';
 import 'package:streamly/widget/video_toolbar.dart';
-import 'package:streamly/widget/video_view.dart';
 
 import 'package:streamly/model/video_model.dart';
 import 'package:translator/translator.dart';

@@ -1,4 +1,5 @@
 import 'package:chewie/chewie.dart' hide MaterialControls;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hi_base/color.dart';

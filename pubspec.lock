@@ -34,7 +34,7 @@ packages:
     source: hosted
     version: "2.1.1"
   cached_network_image:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cached_network_image
       sha256: "7c1183e361e5c8b0a0f21a28401eecdbde252441106a9816400dd4c2b2424916"
@@ -74,7 +74,7 @@ packages:
     source: hosted
     version: "1.3.0"
   chewie:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: chewie
       sha256: "335df378c025588aef400c704bd71f0daea479d4cd57c471c88c056c1144e7cd"
@@ -264,10 +264,24 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  hi_cache:
+    dependency: "direct main"
+    description:
+      path: "component/hi_cache"
+      relative: true
+    source: path
+    version: "0.0.1"
   hi_net:
     dependency: "direct main"
     description:
       path: "component/hi_net"
+      relative: true
+    source: path
+    version: "0.0.1"
+  hi_video:
+    dependency: "direct main"
+    description:
+      path: "component/hi_video"
       relative: true
     source: path
     version: "0.0.1"
@@ -301,7 +315,7 @@ packages:
     source: sdk
     version: "0.0.0"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
       sha256: "00f33b908655e606b86d2ade4710a231b802eec6f11e87e4ea3783fd72077a50"
@@ -512,26 +526,26 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: "95f9997ca1fb9799d494d0cb2a780fd7be075818d59f00c43832ed112b158a82"
+      sha256: a752ce92ea7540fc35a0d19722816e04d0e72828a4200e83a98cf1a1eb524c9a
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.3"
+    version: "2.3.5"
   shared_preferences_android:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: "3b9febd815c9ca29c9e3520d50ec32f49157711e143b7a4ca039eb87e8ade5ab"
+      sha256: "138b7bbbc7f59c56236e426c37afb8f78cbc57b094ac64c440e0bb90e380a4f5"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.3"
+    version: "2.4.2"
   shared_preferences_foundation:
     dependency: transitive
     description:
       name: shared_preferences_foundation
-      sha256: "07e050c7cd39bad516f8d64c455f04508d09df104be326d8c02551590a0d513d"
+      sha256: "6a52cfcdaeac77cad8c97b539ff688ccfc458c007b4db12be584fbe5c0e49e03"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.3"
+    version: "2.5.4"
   shared_preferences_linux:
     dependency: transitive
     description:

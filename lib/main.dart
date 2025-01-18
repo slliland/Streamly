@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hi_cache/hi_cache.dart';
 import 'package:hi_net/core/hi_error.dart';
 import 'package:hi_net/hi_net.dart';
 import 'package:provider/provider.dart';
-import 'package:streamly/db/hi_cache.dart';
 import 'package:streamly/http/dao/login_dao.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
 import 'package:streamly/page/dark_mode_page.dart';

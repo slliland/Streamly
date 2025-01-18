@@ -1,5 +1,5 @@
+import 'package:hi_cache/hi_cache.dart';
 import 'package:hi_net/hi_net.dart';
-import 'package:streamly/db/hi_cache.dart';
 import 'package:streamly/http/request/basic_request.dart';
 import 'package:streamly/http/request/login_request.dart';
 import 'package:streamly/http/request/registration_request.dart';
