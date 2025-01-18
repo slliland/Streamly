@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:streamly/util/color.dart';
+import 'package:hi_base/format_util.dart';
+import 'package:hi_base/color.dart';
 import 'package:translator/translator.dart';
-
 import '../model/video_model.dart';
-import '../util/format_util.dart';
 
 /// Detail page, author widget
 class VideoHeader extends StatefulWidget {

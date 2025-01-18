@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_base/view_util.dart';
 
 import '../model/profile_mo.dart';
-import '../util/view_util.dart';
 
 class CourseCard extends StatelessWidget {
   final List<Course> courseList;

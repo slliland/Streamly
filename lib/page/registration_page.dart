@@ -6,7 +6,7 @@ import '../http/dao/login_dao.dart';
 import '../util/toast.dart';
 import '../widget/appBar.dart';
 import '../widget/login_input.dart';
-import '../util/string_util.dart';
+import 'package:hi_base/string_util.dart';
 import '../widget/login_button.dart';
 
 class RegistrationPage extends StatefulWidget {

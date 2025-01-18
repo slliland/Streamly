@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:streamly/util/view_util.dart';
+import 'package:hi_base/view_util.dart';
 import 'package:translator/translator.dart';
 import '../model/video_model.dart';
 

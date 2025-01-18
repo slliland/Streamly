@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:streamly/util/color.dart';
+import 'package:hi_base/color.dart';
 
 class BarrageSwitch extends StatefulWidget {
   /// Whether the barrage switch is initially expanded

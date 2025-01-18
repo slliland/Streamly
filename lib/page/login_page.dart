@@ -3,12 +3,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hi_net/core/hi_error.dart';
 import 'package:streamly/http/dao/login_dao.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
-import 'package:streamly/util/string_util.dart';
 import 'package:streamly/util/toast.dart';
 import 'package:streamly/widget/login_button.dart';
 import 'package:streamly/widget/login_input.dart';
 import '../widget/appBar.dart';
 import '../widget/login_effect.dart';
+import 'package:hi_base/string_util.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);

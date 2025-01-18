@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../util/view_util.dart';
+import 'package:hi_base/view_util.dart';
 
 /// A Header component that can dynamically change position
 /// Performance optimization: local refresh application @refresh principle

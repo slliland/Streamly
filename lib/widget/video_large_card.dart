@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_base/view_util.dart';
 import 'package:provider/provider.dart';
 import 'package:translator/translator.dart';
 
 import '../model/video_model.dart';
 import '../navigator/hi_navigator.dart';
 import '../provider/theme_provider.dart';
-import '../util/format_util.dart';
+import 'package:hi_base/format_util.dart';
 import '../util/view_util.dart';
 
 class VideoLargeCard extends StatefulWidget {

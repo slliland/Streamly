@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hi_base/view_util.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:streamly/model/profile_mo.dart';
 
-import '../util/view_util.dart';
 import 'hi_blur.dart';
 
 class BenefitCard extends StatelessWidget {

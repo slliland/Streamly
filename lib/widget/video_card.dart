@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hi_base/view_util.dart';
 import 'package:provider/provider.dart';
 import 'package:streamly/model/video_model.dart';
 import 'package:streamly/navigator/hi_navigator.dart';
-import 'package:streamly/util/format_util.dart';
+import 'package:hi_base/format_util.dart';
 import 'package:streamly/util/view_util.dart';
 import 'package:translator/translator.dart';
 

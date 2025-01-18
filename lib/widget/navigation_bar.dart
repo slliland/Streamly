@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/theme_provider.dart';
-import '../util/color.dart';
+import 'package:hi_base/color.dart';
 import '../util/view_util.dart';
 
 class MyNavigationBar extends StatefulWidget {

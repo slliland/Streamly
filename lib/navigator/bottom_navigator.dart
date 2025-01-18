@@ -4,7 +4,7 @@ import '../page/favorite_page.dart';
 import '../page/home_page.dart';
 import '../page/profile_page.dart';
 import '../page/ranking_page.dart';
-import '../util/color.dart';
+import 'package:hi_base/color.dart';
 import 'hi_navigator.dart';
 
 class BottomNavigator extends StatefulWidget {

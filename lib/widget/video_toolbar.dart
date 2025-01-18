@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:streamly/util/color.dart';
+import 'package:hi_base/color.dart';
+import 'package:hi_base/view_util.dart';
 
 import '../model/video_detail_mo.dart';
 import '../model/video_model.dart';
-import '../util/format_util.dart';
+import 'package:hi_base/format_util.dart';
 import '../util/view_util.dart';
 
 class VideoToolBar extends StatelessWidget {

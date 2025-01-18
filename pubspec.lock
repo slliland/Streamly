@@ -257,6 +257,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  hi_base:
+    dependency: "direct main"
+    description:
+      path: "component/hi_base"
+      relative: true
+    source: path
+    version: "0.0.1"
   hi_net:
     dependency: "direct main"
     description:

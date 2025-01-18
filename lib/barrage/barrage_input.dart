@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:streamly/util/color.dart';
-
-import '../util/view_util.dart';
+import 'package:hi_base/color.dart';
+import 'package:hi_base/view_util.dart';
 
 /// Barrage Input Interface
 class BarrageInput extends StatelessWidget {

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hi_base/view_util.dart';
 import 'package:translator/translator.dart';
 import '../model/home_mo.dart';
-import '../util/format_util.dart';
+import 'package:hi_base/format_util.dart';
 import '../util/view_util.dart';
 import 'hi_banner.dart';
 

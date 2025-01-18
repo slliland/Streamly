@@ -21,7 +21,7 @@ import '../widget/barrage_switch.dart';
 import '../http/dao/favorite_dao.dart';
 import '../http/dao/like_dao.dart';
 import '../provider/theme_provider.dart';
-import '../util/color.dart';
+import 'package:hi_base/color.dart';
 import '../util/hi_constants.dart';
 import '../util/toast.dart';
 import '../util/view_util.dart';

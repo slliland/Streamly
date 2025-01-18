@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hi_net/core/hi_error.dart';
-import 'package:lottie/lottie.dart';
 
 import '../widget/loading_container.dart';
 

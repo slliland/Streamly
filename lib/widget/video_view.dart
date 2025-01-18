@@ -1,8 +1,8 @@
 import 'package:chewie/chewie.dart' hide MaterialControls;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:streamly/util/color.dart';
-import 'package:streamly/util/view_util.dart';
+import 'package:hi_base/color.dart';
+import 'package:hi_base/view_util.dart';
 import 'package:video_player/video_player.dart';
 
 import 'hi_video_controls.dart';
