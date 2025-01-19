@@ -51,10 +51,13 @@ class _StreamAppState extends State<StreamApp> {
               child: Consumer<ThemeProvider>(builder: (BuildContext context,
                   ThemeProvider themeProvider, Widget? child) {
                 return MaterialApp(
-                    home: widget,
-                    theme: themeProvider.getTheme(),
-                    darkTheme: themeProvider.getTheme(isDarkMode: true),
-                    themeMode: themeProvider.getThemeMode());
+                  home: widget,
+                  debugShowCheckedModeBanner: false,
+                  theme: themeProvider.getTheme(),
+                  darkTheme: themeProvider.getTheme(isDarkMode: true),
+                  themeMode: themeProvider.getThemeMode(),
+                  title: 'Streamly',
+                );
               }));
         });
   }
