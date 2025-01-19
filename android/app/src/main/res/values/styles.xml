@@ -2,10 +2,25 @@
 <resources>
     <!-- Theme applied to the Android Window while the process is starting when the OS's Dark Mode setting is off -->
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
-        <!-- Show a splash screen on the activity. Automatically removed when
-             the Flutter engine draws its first frame -->
+        <!-- Show a splash screen on the activity -->
         <item name="android:windowBackground">@drawable/launch_background</item>
+
+        <!-- The new Android 12 splash screen attributes -->
+        <!-- This controls the splash background color -->
+        <item name="android:windowSplashScreenBackground">@android:color/white</item>
+
+        <!-- Use a custom drawable or null for the animated icon -->
+        <!-- If you only want your custom background, you can do @null -->
+        <!-- or point to a PNG in drawable: @drawable/my_splash_logo -->
+        <item name="android:windowSplashScreenAnimatedIcon">@null</item>
+
+        <!-- Optionally set the splash animation duration -->
+        <item name="android:windowSplashScreenAnimationDuration">200</item>
+
+        <!-- Continue using fullscreen -->
+        <item name="android:windowFullscreen">true</item>
     </style>
+
     <!-- Theme applied to the Android Window as soon as the process has started.
          This theme determines the color of the Android Window while your
          Flutter UI initializes, as well as behind your Flutter UI while its
